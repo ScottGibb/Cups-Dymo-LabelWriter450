@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+    cups:
+        build: . 
+        container_name: Cups
+        restart: unless-stopped
+        stdin_open: true
+        tty: true
+        ports:
+            - "631:631"
+        devices:
+            - /dev/bus/usb:/dev/bus/usb
+      
