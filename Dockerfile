@@ -21,16 +21,29 @@ RUN apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Dymo CUPS Driver
 RUN apt-get install -y \
     printer-driver-dymo
 
+# Install Dymo CUPS Drivers
 RUN wget http://download.dymo.com/dymo/Software/Download%20Drivers/Linux/Download/dymo-cups-drivers-1.4.0.tar.gz &&\
     tar -xzf dymo-cups-drivers-1.4.0.tar.gz &&\
     mkdir -p /usr/share/cups/model &&\
     cp dymo-cups-drivers-1.4.0.5/ppd/lw450.ppd /usr/share/cups/model/ 
 
-# Expose port 631 for CUPS web interface
-EXPOSE 631
+# Install Dymo SDK Patch
+RUN apt-get install -y git libcups2-dev libcupsimage2-dev gcc g++ automake \
+    cd ~/ \
+    git clone https://github.com/Kyle-Falconer/DYMO-SDK-for-Linux.git \
+    cd DYMO-SDK-for-Linux \
+    aclocal \
+    automake --add-missing \
+    autoconf \
+    ./configure \
+    make \
+    make install \
+    # Expose port 631 for CUPS web interface
+    EXPOSE 631
 
 # Add user and disable sudo password checking
 RUN useradd \
