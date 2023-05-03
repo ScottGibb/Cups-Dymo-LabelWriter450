@@ -1,8 +1,7 @@
 FROM raspbian/stretch
 
 # Install dependencies
-RUN apt-get update 
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     sudo \
     whois \
     usbutils \
@@ -18,12 +17,16 @@ RUN apt-get install -y \
     hplip \
     smbclient \
     printer-driver-cups-pdf \
+    printer-driver-dymo \
+    git \
+    libcups2-dev \
+    libcupsimage2-dev \
+    gcc\
+    g++ \
+    automake \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Dymo CUPS Driver
-RUN apt-get install -y \
-    printer-driver-dymo
 
 # Install Dymo CUPS Drivers
 RUN wget http://download.dymo.com/dymo/Software/Download%20Drivers/Linux/Download/dymo-cups-drivers-1.4.0.tar.gz &&\
@@ -32,8 +35,7 @@ RUN wget http://download.dymo.com/dymo/Software/Download%20Drivers/Linux/Downloa
     cp dymo-cups-drivers-1.4.0.5/ppd/lw450.ppd /usr/share/cups/model/ 
 
 # Install Dymo SDK Patch
-RUN apt-get install -y git libcups2-dev libcupsimage2-dev gcc g++ automake &&\
-    cd ~/ &&\
+RUN cd ~/ &&\
     git clone https://github.com/Kyle-Falconer/DYMO-SDK-for-Linux.git &&\
     cd DYMO-SDK-for-Linux &&\
     aclocal &&\
