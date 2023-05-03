@@ -32,15 +32,15 @@ RUN wget http://download.dymo.com/dymo/Software/Download%20Drivers/Linux/Downloa
     cp dymo-cups-drivers-1.4.0.5/ppd/lw450.ppd /usr/share/cups/model/ 
 
 # Install Dymo SDK Patch
-RUN apt-get install -y git libcups2-dev libcupsimage2-dev gcc g++ automake \
-    cd ~/ \
-    git clone https://github.com/Kyle-Falconer/DYMO-SDK-for-Linux.git \
-    cd DYMO-SDK-for-Linux \
-    aclocal \
-    automake --add-missing \
-    autoconf \
-    ./configure \
-    make \
+RUN apt-get install -y git libcups2-dev libcupsimage2-dev gcc g++ automake &&\
+    cd ~/ &&\
+    git clone https://github.com/Kyle-Falconer/DYMO-SDK-for-Linux.git &&\
+    cd DYMO-SDK-for-Linux &&\
+    aclocal &&\
+    automake --add-missing &&\
+    autoconf &&\
+    ./configure &&\
+    make &&\
     make install 
 # Expose port 631 for CUPS web interface
 EXPOSE 631
