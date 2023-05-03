@@ -1,0 +1,13 @@
+name: Build
+
+on: [push]
+
+jobs:
+  docker-build:
+    name: Docker Build
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker Image
+        run: |
+            docker build -t DymoCups .
