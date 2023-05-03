@@ -60,7 +60,8 @@ RUN useradd \
 # Copy the default configuration file
 COPY --chown=root:lp cupsd.conf /etc/cups/cupsd.conf
 
-COPY ./setup.sh ./setup.sh
+COPY . .
+
 RUN chmod +x /setup.sh
 
 # Run CUPS in the foreground

@@ -1,0 +1,4 @@
+*.yml
+Dockerfile
+*.md
+.github

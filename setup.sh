@@ -26,7 +26,8 @@ lpoptions -d dymo
 
 echo "Finished Setup! XD"
 
-echo "Cups Started '\n' xD" >test.txt
+# Test Print
 lp -d dymo test.txt
 
+# Keep the container running
 /usr/sbin/cupsd -f
