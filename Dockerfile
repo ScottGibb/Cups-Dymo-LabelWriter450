@@ -41,9 +41,9 @@ RUN apt-get install -y git libcups2-dev libcupsimage2-dev gcc g++ automake \
     autoconf \
     ./configure \
     make \
-    make install \
-    # Expose port 631 for CUPS web interface
-    EXPOSE 631
+    make install 
+# Expose port 631 for CUPS web interface
+EXPOSE 631
 
 # Add user and disable sudo password checking
 RUN useradd \
