@@ -1,7 +1,7 @@
 FROM raspbian/stretch
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get clean  && apt-get update && apt-get install -y \
     sudo \
     whois \
     usbutils \
