@@ -3,7 +3,8 @@ name: Static-Analysis
 on: [push]
 
 jobs:
-    Shell-Lint_Check:
+    Shell_Lint_Check:
+        name: Shell Lint Check
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Code
