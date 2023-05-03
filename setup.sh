@@ -26,7 +26,7 @@ lpoptions -d dymo
 
 echo "Finished Setup! XD"
 
-echo Cups Started \n xD > test.txt
+echo Cups Started '\n' xD >test.txt
 lp -d dymo test.txt
 
 /usr/sbin/cupsd -f

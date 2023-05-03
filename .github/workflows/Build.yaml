@@ -1,6 +1,0 @@
-# name: Build
-
-# on: [push]
-
-# jobs:
-#     build:
