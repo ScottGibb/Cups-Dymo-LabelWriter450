@@ -5,7 +5,7 @@ on: [push]
 jobs:
   docker-build:
     name: Docker Build
-    runs-on: PiLab
+    runs-on: Linux
     steps:
       - uses: actions/checkout@v2
       - name: Build Docker Image
