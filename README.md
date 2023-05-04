@@ -48,6 +48,14 @@ As for installing the software, the best way of installing this is to use the Do
 docker ps
 ```
 
+## Continuous Integration Pipelines
+
+Within this repository, there are two workflows:
+
+- Static Analysis: WHich performs Linting on all the main filetypes of this repository such as Dockerfiles, Markdown files and Shell Scripts.
+
+- Build: This performs the building of the Docker Image ensuring that it can be built. This is done using a Self Hosted GitHub Runner.
+
 ## Useful Links
 
 This project was inspired by lots of other repositories and open-source projects, which are linked below:
