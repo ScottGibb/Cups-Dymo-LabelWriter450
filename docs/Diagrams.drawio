@@ -1,0 +1,100 @@
+<mxfile host="Electron" modified="2023-05-04T11:38:41.595Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.2.1 Chrome/112.0.5615.87 Electron/24.1.2 Safari/537.36" etag="wbwu0UrGJR-UW1Ec5rAy" version="21.2.1" type="device" pages="2">
+  <diagram name="Languages and Tools" id="Z6-mRTUXeOV8sHCGbSGZ">
+    <mxGraphModel dx="658" dy="2089" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="j77I_fI-1xxymu3gcewv-1" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://cdn.thingiverse.com/assets/7c/1f/3b/22/c4/Scott_Gibb_Cartoon.jpg;" vertex="1" parent="1">
+          <mxGeometry x="1230" y="-800" width="195.64" height="195.64" as="geometry" />
+        </mxCell>
+        <mxCell id="j77I_fI-1xxymu3gcewv-2" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://www.suse.com/c/wp-content/uploads/2021/09/rancher_blog_compose.png;" vertex="1" parent="1">
+          <mxGeometry x="950" y="-589.52" width="203.14" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="j77I_fI-1xxymu3gcewv-3" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://www.docker.com/wp-content/uploads/2021/10/Moby-logo-sm.png;clipPath=inset(19.67% 16% 20.67% 14%);" vertex="1" parent="1">
+          <mxGeometry x="1520" y="-584" width="222.85" height="189.95" as="geometry" />
+        </mxCell>
+        <mxCell id="j77I_fI-1xxymu3gcewv-5" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://assets.stickpng.com/images/584830fecef1014c0b5e4aa2.png;" vertex="1" parent="1">
+          <mxGeometry x="1166" y="-584" width="148.81" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="j77I_fI-1xxymu3gcewv-9" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://internationalpointofsale.com/images/dymologo.jpg;clipPath=inset(0% 2.67% 0% 17.33%);" vertex="1" parent="1">
+          <mxGeometry x="1073.85" y="-389.52" width="507.94" height="99.47158333333333" as="geometry" />
+        </mxCell>
+        <mxCell id="2Uz_ZB5IBGdSPm6e-h5p-1" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/CUPS.svg/800px-CUPS.svg.png;" vertex="1" parent="1">
+          <mxGeometry x="1330" y="-594" width="177.78" height="200" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="eY_xb4qyC-1BY2Pkyp4S" name="Architecture">
+    <mxGraphModel dx="1393" dy="863" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Ya3p1WhYO9e1QDV7LUQg-1" value="Local Area &lt;br&gt;Network" style="ellipse;shape=cloud;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="354" y="230" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="WmsCsjlRGjKCx9kSwXSr-1" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://5.imimg.com/data5/SELLER/Default/2020/12/YH/GH/PU/1225448/raspberry-pi-zero-w-500x500.jpg;" vertex="1" parent="1">
+          <mxGeometry x="590" y="205" width="130" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="WmsCsjlRGjKCx9kSwXSr-3" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=0.875;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="Ya3p1WhYO9e1QDV7LUQg-1" target="WmsCsjlRGjKCx9kSwXSr-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="380" as="sourcePoint" />
+            <mxPoint x="490" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WmsCsjlRGjKCx9kSwXSr-4" value="IP Link" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="WmsCsjlRGjKCx9kSwXSr-3">
+          <mxGeometry x="-0.1185" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WmsCsjlRGjKCx9kSwXSr-5" value="Windows" style="image;html=1;image=img/lib/clip_art/computers/Monitor_128x128.png" vertex="1" parent="1">
+          <mxGeometry x="130" y="150" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="WmsCsjlRGjKCx9kSwXSr-6" value="Linux" style="image;html=1;image=img/lib/clip_art/computers/Monitor_128x128.png" vertex="1" parent="1">
+          <mxGeometry x="130" y="350" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="WmsCsjlRGjKCx9kSwXSr-7" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;entryX=0.16;entryY=0.55;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="WmsCsjlRGjKCx9kSwXSr-5" target="Ya3p1WhYO9e1QDV7LUQg-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="350" y="410" as="sourcePoint" />
+            <mxPoint x="400" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WmsCsjlRGjKCx9kSwXSr-8" value="" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=2;rounded=0;entryX=0.16;entryY=0.55;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="WmsCsjlRGjKCx9kSwXSr-6" target="Ya3p1WhYO9e1QDV7LUQg-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="290" y="410" as="sourcePoint" />
+            <mxPoint x="340" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WmsCsjlRGjKCx9kSwXSr-9" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Windows_logo_-_2012.svg/1024px-Windows_logo_-_2012.svg.png;" vertex="1" parent="1">
+          <mxGeometry x="76" y="163" width="54" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="WmsCsjlRGjKCx9kSwXSr-10" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://logos-world.net/wp-content/uploads/2020/09/Linux-Logo-1996-present.png;clipPath=inset(5.03% 28.33% 2.66% 27.67%);" vertex="1" parent="1">
+          <mxGeometry x="72.88" y="356.25" width="57.11538461538461" height="67.5" as="geometry" />
+        </mxCell>
+        <mxCell id="wYjsmu1mtqnqt-NzpyDG-1" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://www.suse.com/c/wp-content/uploads/2021/09/rancher_blog_compose.png;" vertex="1" parent="1">
+          <mxGeometry x="614.37" y="125" width="81.26" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="-kbiaoNNLLPFLGdm06lt-1" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/CUPS.svg/800px-CUPS.svg.png;" vertex="1" parent="1">
+          <mxGeometry x="614.37" y="345" width="62.22" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="UG0-H3PEb_xj9Yz8lO9x-1" value="CUPS &#xa;Container" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://www.docker.com/wp-content/uploads/2021/10/Moby-logo-sm.png;clipPath=inset(19.67% 16% 20.67% 14%);" vertex="1" parent="1">
+          <mxGeometry x="640" y="380" width="70.4" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="-kbiaoNNLLPFLGdm06lt-2" value="" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="WmsCsjlRGjKCx9kSwXSr-1" target="-kbiaoNNLLPFLGdm06lt-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="760" y="300" as="sourcePoint" />
+            <mxPoint x="820" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-kbiaoNNLLPFLGdm06lt-4" value="USB Link" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="-kbiaoNNLLPFLGdm06lt-2">
+          <mxGeometry x="-0.2944" y="1" relative="1" as="geometry">
+            <mxPoint x="17" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="-kbiaoNNLLPFLGdm06lt-3" value="Dymo LabelWriter 450" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://www.dymo-express.co.uk/user/products/large/S0838810.jpg;" vertex="1" parent="1">
+          <mxGeometry x="840" y="205" width="130" height="130" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
