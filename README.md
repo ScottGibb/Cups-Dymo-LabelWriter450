@@ -37,9 +37,9 @@ As for installing the software, the best way of installing this is to use the Do
 1. Clone the repository to the Raspberry Pi Zero W.
 2. Run the following command to build the image and run the container, using the docker-compose.yml file, the --build will force the building of the container using the Dockerfile:
 
-```bash
-docker-compose up -d --build
-```
+    ```bash
+    docker-compose up -d --build
+    ```
 
 3. The container should now be running and the printer should be available on the network.
 4. To check that the container is running, run the following command:
