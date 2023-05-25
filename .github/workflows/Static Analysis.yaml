@@ -1,55 +1,63 @@
+---
+
 name: Static-Analysis
 
 on: [push]
 
 jobs:
-    Shell_Lint_Check:
-        name: Shell Lint Check
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout Code
-              uses: actions/checkout@v2
+  Shell_Lint_Check:
+    name: Shell Lint Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Download Packages
+        run: |
+          sudo apt-get install shellcheck
+      - name: Shell Check
+        run: |
+          echo "Running Shell Check"
+          shellcheck *.sh
 
-            - name: Download Packages
-              run: |
-                sudo apt-get install shellcheck 
+  Dockerfile_Lint_Check:
+    name: Dockerfile Lint Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Download Packages
+        run: |
+          sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64
+          sudo chmod +x /bin/hadolint .
+      - name: Dockerfile Lint
+        run: |
+          hadolint --failure-threshold error --verbose *Dockerfile
+      - name: Docker Compose Lint
+        run: |
+          docker-compose config  || { echo "Invalid Docker Compose file"; exit 1; }
 
-            - name: Shell Check
-              run: |
-                shellcheck *.sh
+  Markdown_Lint_Check:
+    name: Markdown Lint Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run markdownlint
+        run: |
+          echo "Running markdownlint"
+          markdownlint '**/*.md'
 
-    Dockerfile_Lint_Check:
-        name: Dockerfile Lint Check
-        runs-on: ubuntu-latest
-        steps:    
-            - name: Checkout Code
-              uses: actions/checkout@v2    
-
-            - name: Download Packages
-              run: |
-                sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64 
-                sudo chmod +x /bin/hadolint .
-
-            - name: Dockerfile Lint
-              run: |
-                hadolint --failure-threshold error --verbose *Dockerfile
-
-            - name: Docker Compose Lint
-              run: |
-                docker-compose config  || { echo "Invalid Docker Compose file"; exit 1; }
-
-    Markdown_Lint_Check:
-        name: Markdown Lint Check
-        runs-on: ubuntu-latest
-        steps:
-            - name: Install markdownlint-cli
-              run: npm install -g markdownlint-cli
-
-            - name: Checkout code
-              uses: actions/checkout@v2
-
-            - name: Run markdownlint
-              run: markdownlint '**/*.md'
-                
-
-            
+  YAML_Lint_Check:
+    name: YAML Lint Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install yamllint
+        run: sudo apt install yamllint
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run yamllint
+        run: |
+          echo "Checking YAML files"
+          yamllint -c .yamllint.yaml .github/**/**.yaml
