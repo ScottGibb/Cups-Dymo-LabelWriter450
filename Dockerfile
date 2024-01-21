@@ -1,4 +1,4 @@
-FROM raspbian/stretch
+FROM debian:latest
 
 # Install dependencies
 RUN apt-get clean  && apt-get update && apt-get install -y \
