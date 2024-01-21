@@ -52,9 +52,9 @@ docker ps
 
 Within this repository, there are two workflows:
 
-- Static Analysis: WHich performs Linting on all the main filetypes of this repository such as Dockerfiles, Markdown files and Shell Scripts.
+- Static Analysis: This performs Linting on all the main filetypes of this repository such as Dockerfiles, Markdown files and Shell Scripts.
 
-- Build: This performs the building of the Docker Image ensuring that it can be built. This is done using a Self Hosted GitHub Runner.
+- Build: This performs the building of the Docker Image ensuring that it can be built. This is done using a Self-hosted GitHub Runner.
 
 ## Useful Links
 
