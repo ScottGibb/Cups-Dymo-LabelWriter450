@@ -1,4 +1,3 @@
 *.yml
-Dockerfile
 *.md
 .github
