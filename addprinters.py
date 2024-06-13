@@ -2,6 +2,7 @@
 
 import time, sys, os, subprocess
 
+testFilePath = "test.txt"
 print("Add printers to CUPS..")
 
 
@@ -40,9 +41,12 @@ while True:
         name = printerName,
     ))
 
-    subprocess.call("lpadmin -p {} -v {} -P {}".format(printerName, printerDevURI, printerPPDFile), shell=True)
+    subprocess.call("lpadmin -p {} -v {}".format(printerName, printerDevURI, printerPPDFile), shell=True)
     subprocess.call("cupsenable {}".format(printerName), shell=True)
     subprocess.call("cupsaccept {}".format(printerName), shell=True)
+    
+    subprocess.call("lpoptions -d {}".format(printerName), shell=True)
+    subprocess.call("lp -d {} {}".format(printerName,testFilePath), shell=True)
 
     print("Printer '{name}' added".format(
         name = printerName,
