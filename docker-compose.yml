@@ -11,4 +11,4 @@ services:
             - "631:631"
         devices:
             - /dev/bus/usb:/dev/bus/usb
-      
+

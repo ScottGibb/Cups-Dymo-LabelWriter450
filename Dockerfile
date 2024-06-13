@@ -1,6 +1,5 @@
 ARG MAINTAINER
 FROM debian:stable-slim
-MAINTAINER $MAINTAINER
 
 # Install Packages (basic tools, cups, basic drivers, HP drivers)
 RUN apt-get update \
@@ -47,16 +46,16 @@ RUN wget http://download.dymo.com/dymo/Software/Download%20Drivers/Linux/Downloa
     mkdir -p /usr/share/cups/model &&\
     cp dymo-cups-drivers-1.4.0.5/ppd/lw450.ppd /usr/share/cups/model/
 
-# Install Dymo SDK Patch
-RUN cd ~/ &&\
-    git clone https://github.com/ScottGibb/DYMO-SDK-for-Linux.git &&\
-    cd DYMO-SDK-for-Linux &&\
-    aclocal &&\
-    automake --add-missing &&\
-    autoconf &&\
-    ./configure &&\
-    make &&\
-    make install
+# # Install Dymo SDK Patch
+# RUN cd ~/ &&\
+#     git clone https://github.com/ScottGibb/DYMO-SDK-for-Linux.git &&\
+#     cd DYMO-SDK-for-Linux &&\
+#     aclocal &&\
+#     automake --add-missing &&\
+#     autoconf &&\
+#     ./configure &&\
+#     make &&\
+#     make install
 
 # Expose port 631 for CUPS web interface
 EXPOSE 631
@@ -64,7 +63,7 @@ EXPOSE 631
 
 # Copy the default configuration file
 COPY --chown=root:lp cupsd.conf /etc/cups/cupsd.conf
-
+COPY test.txt test.txt
 COPY setup.sh setup.sh
 RUN chmod +x /setup.sh
 
