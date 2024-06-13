@@ -48,6 +48,23 @@ As for installing the software, the best way of installing this is to use the Do
 docker ps
 ```
 
+## Setting up your Windows Device
+
+When setting up windows you will need to do the following steps:
+
+You must first download Dymo Connect before adding the cups printer to your windows 10 installation. This is due to the drivers being a part of dymo connect.
+
+[Installation Link](https://download.dymo.com/dymo/Software/Win/DCDSetup1.4.6.37.exe)
+
+![Stage 1 Windows 10](./docs/windows-10-add-printer-1.png)
+![Stage 1 Windows 10](./docs/windows-10-add-printer-2.png)
+
+You should then be able to use the printer from the rest of windows.
+
+## Developer Story and Issues
+
+
+
 ## Continuous Integration Pipelines
 
 Within this repository, there are two workflows:
@@ -69,3 +86,5 @@ This project was inspired by lots of other repositories and open-source projects
 - [CUPS Dockerfile](https://github.com/olbat/dockerfiles/tree/master/cupsd)
 
 - [Windows 10 and CUPS](https://techblog.paalijarvi.fi/2020/05/25/making-windows-10-to-print-to-a-cups-printer-over-the-network/)
+
+- [Jonathans Cups Blog](https://johnathan.org/configure-a-raspberry-pi-as-a-print-server-for-dymo-label-printers/)
