@@ -59,9 +59,7 @@ while True:
     )
     subprocess.call(f"cupsenable {printerName}", shell=True)
     subprocess.call(f"cupsaccept {printerName}", shell=True)
-    subprocess.call(
-        f"lpoptions -d {printerName}", shell=True
-    )  # Set Default Printer to this one
+    subprocess.call(f"lpoptions -d {printerName}", shell=True)  # Set Default Printer to this one
     print(f"Printer '{printerName}' added")
     print(f"Waiting {INIT_PERIOD_S}s")
     time.sleep(INIT_PERIOD_S)

@@ -86,11 +86,42 @@ You should then be able to use the printer from the rest of windows.
 
 ## Setting up the Dymo LabelWriter using the CUPS UI
 
+If for some reason you are like myself, in which the auto setup does not seem to work correctly and the printer is always
+""Waiting for printer to become available." Then you will have to set up the printer manually, like so:
+
+### Step 1: Go to Administration and add a printer
+
+![alt text](./docs/cups%20setup%20gui/image.png)
+![alt text](./docs/cups%20setup%20gui/image-1.png)
+
+### Step 2: Select Dymo LabelWriter
+
+![alt text](./docs/cups%20setup%20gui/image-2.png)
+
+### Step 3: Rename and Share
+
+![alt text](./docs/cups%20setup%20gui/image-3.png)
+
+### Step 4: Select Dymo LabelWriter 450
+
+![alt text](./docs/cups%20setup%20gui/image-4.png)
+Im not sure why there is two options of everything
+
+### Step 5: Set your printer options
+
+![alt text](./docs/cups%20setup%20gui/image-5.png)
 This seems to happen a lot [issue](https://forums.raspberrypi.com/viewtopic.php?t=333307)
 
-## Developer Story and Issues
+## Known Issues
 
+### Google Chrome Print Pages
 
+For some reason chrome doesnt always have the printer pages imediately, in this case swapping between the printers
+seems to work and it eventually shows.
+
+### Google Chrome No fit to scale
+
+For some reason chrome doesnt have the fit to scale option anymore, no idea why that is.
 
 ## Continuous Integration Pipelines
 
