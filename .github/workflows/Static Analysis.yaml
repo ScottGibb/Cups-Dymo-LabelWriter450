@@ -17,7 +17,7 @@ jobs:
       - name: Shell Check
         run: |
           echo "Running Shell Check"
-          shellcheck *.sh
+          shellcheck **.sh
 
   Dockerfile_Lint_Check:
     name: Dockerfile Lint Check
@@ -76,4 +76,4 @@ jobs:
       - name: Run pylint
         run: |
           echo "Checking Python files with pylint"
-          pylint --fail-under=8 ./src
+          pylint --fail-under=8 ./scripts
