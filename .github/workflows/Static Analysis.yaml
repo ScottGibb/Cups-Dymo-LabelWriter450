@@ -17,7 +17,7 @@ jobs:
       - name: Shell Check
         run: |
           echo "Running Shell Check"
-          shellcheck **.sh
+          shellcheck scripts/**.sh
 
   Dockerfile_Lint_Check:
     name: Dockerfile Lint Check
