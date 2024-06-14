@@ -1,4 +1,7 @@
 #!/bin/bash
+# A simple Bash Script to enable the cups server and call the python
+# script which will then add the Printers to cups on boot
+
 # Launch cupds in the foreground
 echo "INFO: Detected USB Connections"
 lsusb

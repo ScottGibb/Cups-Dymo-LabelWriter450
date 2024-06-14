@@ -48,6 +48,29 @@ As for installing the software, the best way of installing this is to use the Do
 docker ps
 ```
 
+## Directory Structure
+
+The following is the directory structure of the project:
+
+```bash
+tree -L 1
+.
+├── conf
+├── docker-compose.yml
+├── Dockerfile
+├── docs
+├── ppd
+├── ReadMe.md
+├── ruff.toml
+├── scripts
+└── test.txt
+```
+
+- conf: is the configuration folder for cups
+- ppd: is the PostScript Printer Description files for the Dymo LabelWriters
+- docs: All diagrams and related documentation goes here
+- scripts: the scripts that go inside the docker container, for more information read [this](./scripts/ReadMe.md).
+
 ## Setting up your Windows Device
 
 When setting up windows you will need to do the following steps:
@@ -60,6 +83,10 @@ You must first download Dymo Connect before adding the cups printer to your wind
 ![Stage 1 Windows 10](./docs/windows-10-add-printer-2.png)
 
 You should then be able to use the printer from the rest of windows.
+
+## Setting up the Dymo LabelWriter using the CUPS UI
+
+This seems to happen a lot [issue](https://forums.raspberrypi.com/viewtopic.php?t=333307)
 
 ## Developer Story and Issues
 

@@ -1,5 +1,5 @@
 ARG MAINTAINER
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 # Install Packages (basic tools, cups, basic drivers, HP drivers)
 RUN apt-get update \
