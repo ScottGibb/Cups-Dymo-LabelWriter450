@@ -11,4 +11,5 @@ lpinfo -v
 
 echo "INFO:Adding Printer to Cups"
 python3 -u ./addprinters.py
-sleep infinity
+/usr/sbin/cupsd -f
+

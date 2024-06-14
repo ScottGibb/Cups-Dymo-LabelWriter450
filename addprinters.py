@@ -1,3 +1,6 @@
+# Thi script was taken and adapted from this repository: https://github.com/Westwoodlabs/web2dymo-docker.
+# Special Thanks to WestWoodLabs!!
+
 #!/usr/bin/env python3
 
 import time, sys, os, subprocess
@@ -44,9 +47,8 @@ while True:
     subprocess.call("lpadmin -p {} -v {}".format(printerName, printerDevURI, printerPPDFile), shell=True)
     subprocess.call("cupsenable {}".format(printerName), shell=True)
     subprocess.call("cupsaccept {}".format(printerName), shell=True)
-    
-    subprocess.call("lpoptions -d {}".format(printerName), shell=True)
-    subprocess.call("lp -d {} {}".format(printerName,testFilePath), shell=True)
+    subprocess.call("lpoptions -d {}".format(printerName), shell=True) # Set Default Printer to this one
+    subprocess.call("lp -d {} {}".format(printerName,testFilePath), shell=True) # Print Test Page
 
     print("Printer '{name}' added".format(
         name = printerName,
