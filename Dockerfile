@@ -46,14 +46,14 @@ RUN mkdir -p  /usr/share/cups/model
 COPY ppd/ /usr/share/cups/model
 
 # Copy the default configuration file
-COPY --chown=root:lp cupsd.conf /etc/cups/cupsd.conf
+COPY --chown=root:lp conf/cupsd.conf /etc/cups/cupsd.conf
 COPY test.txt test.txt
 
-COPY ./addprinters.py ./addprinters.py
+COPY scripts/add_printers.py add_printers.py
 
 EXPOSE 631
 # Start Up Scripts
-COPY setup.sh setup.sh
+COPY scripts/setup.sh setup.sh
 RUN chmod +x setup.sh
 # Run CUPS in the foreground
 CMD ["./setup.sh"]

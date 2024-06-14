@@ -47,7 +47,7 @@ jobs:
       - name: Run markdownlint
         run: |
           echo "Running markdownlint"
-          markdownlint '**/*.md'
+          markdownlint *.md
 
   YAML_Lint_Check:
     name: YAML Lint Check
@@ -61,3 +61,19 @@ jobs:
         run: |
           echo "Checking YAML files"
           yamllint -c .yamllint.yaml .github/**/**.yaml
+          yamllint -c .yamllint.yaml docker-compose.yml
+
+
+  Python_Lint_Check:
+    name: Python Lint Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install pylint
+        run: |
+          pip install pylint
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run pylint
+        run: |
+          echo "Checking Python files with pylint"
+          pylint --fail-under=8 ./src

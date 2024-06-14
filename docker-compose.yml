@@ -13,7 +13,7 @@ services:
             - /dev/bus/usb:/dev/bus/usb
         environment:
             PRINTER1_ENABLE: 1
-            PRINTER1_NAME: dymo450
+            PRINTER1_NAME: Dymo450-Docker-Init
             PRINTER1_DEVURI: usb://DYMO/LabelWriter%20450?serial=0101011234560
             PRINTER1_PPDFILE: /usr/share/cups/model/lw450.ppd
 
