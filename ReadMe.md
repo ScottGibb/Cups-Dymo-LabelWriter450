@@ -4,9 +4,7 @@
 [![Build](https://github.com/ScottGibb/Cups_Dymo-450/actions/workflows/Build.yaml/badge.svg)](https://github.com/ScottGibb/Cups_Dymo-450/actions/workflows/Build.yaml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-<center>
-<img src= "docs/Languages And Tools.png">
-</center>
+!["languages and tools](./docs/Languages%20And%20Tools.png)
 
 ## Summary
 
@@ -16,9 +14,7 @@ This repository contains a Dockerfile which runs CUPS on Raspberry Pi. This proj
 
 The architecture of this project is as follows:
 
-<center>
-<img src= "docs/Architecture.png">
-</center>
+![Architecture](./docs/Architecture.png)
 
 The key parts are as follows:
 
