@@ -46,26 +46,26 @@ while True:
     ENABLED_PRINTER_COUNT += 1
 
     # Get printer Variables
-    printerName = os.getenv(f"PRINTER{i}_NAME")
-    printerDevURI = os.getenv(f"PRINTER{i}_DEVURI")
-    printerPPDFile = os.getenv(f"PRINTER{i}_PPDFILE")
+    printer_name = os.getenv(f"PRINTER{i}_NAME")
+    printer_dev_uri = os.getenv(f"PRINTER{i}_DEVURI")
+    printer_driver = os.getenv(f"PRINTER{i}_DRIVER")
 
     # Add Printer
-    print(f"Adding printer '{printerName}'")
+    print(f"Adding printer '{printer_name}'")
 
     # Call Subprocesses to add printer to cups
     subprocess.call(
-        f"lpadmin -p {printerName} -v {printerDevURI} -P {printerPPDFile}", shell=True
+        f"lpadmin -p {printer_name} -E -v {printer_dev_uri} -v {printer_driver}", shell=True
     )
-    subprocess.call(f"cupsenable {printerName}", shell=True)
-    subprocess.call(f"cupsaccept {printerName}", shell=True)
-    subprocess.call(f"lpoptions -d {printerName}", shell=True)  # Set Default Printer to this one
-    print(f"Printer '{printerName}' added")
+    subprocess.call(f"cupsenable {printer_name}", shell=True)
+    subprocess.call(f"cupsaccept {printer_name}", shell=True)
+    subprocess.call(f"lpoptions -d {printer_name}", shell=True)  # Set Default Printer to this one
+    print(f"Printer '{printer_name}' added")
     print(f"Waiting {INIT_PERIOD_S}s")
     time.sleep(INIT_PERIOD_S)
     print("Printing test Page!")
     subprocess.call(
-        "lp -d {printerName} {TEST_FILE_PATH}", shell=True
+        "lp -d {printer_name} {TEST_FILE_PATH}", shell=True
     )  # Print Test Page
     print("Printed test Page!")
 

@@ -8,7 +8,7 @@ lsusb
 echo "INFO: Ended USB Connections"
 
 echo "INFO:Starting Cups Demon"
-/usr/sbin/cupsd 
+/usr/sbin/cupsd
 
 echo "INFO:Cups Information:"
 #Print Cups Info
