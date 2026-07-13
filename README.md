@@ -5,16 +5,6 @@ on a Raspberry Pi. The image uses Debian's packaged `printer-driver-dymo`
 driver, automatically discovers the connected DYMO USB device, and exposes the
 shared queue over IPP.
 
-## What changed
-
-The previous implementation depended on an old HTTP driver download, compiled
-an unmaintained SDK during every build, started CUPS twice, hard-coded a
-fictional printer serial number, and printed a label whenever the container
-restarted. Those behaviours made startup fragile and could create unwanted
-labels.
-
-This version instead:
-
 - uses the maintained Debian CUPS driver package;
 - discovers the real `usb://DYMO/...` URI at runtime, with an optional override;
 - starts one supervised CUPS process and waits until it is ready;
@@ -28,9 +18,6 @@ This version instead:
 - A container runtime that supports the Pi. The original Raspberry Pi Zero W is
   ARMv6; the image is built for the compatible `linux/arm/v5` platform.
 - Docker Compose v2 (`docker compose`) on the Raspberry Pi.
-
-> Docker Desktop on macOS can validate the Compose file, but cannot validate
-> this USB printer. Use the Raspberry Pi for the runtime steps below.
 
 ## Start it on the Raspberry Pi
 
