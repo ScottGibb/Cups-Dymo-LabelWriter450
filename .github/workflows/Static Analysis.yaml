@@ -1,63 +1,41 @@
 ---
 
-name: Static-Analysis
+name: Static analysis
 
-on: [push]
+'on':
+  push:
+  pull_request:
+
+permissions:
+  contents: read
 
 jobs:
-  Shell_Lint_Check:
-    name: Shell Lint Check
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-      - name: Download Packages
-        run: |
-          sudo apt-get install shellcheck
-      - name: Shell Check
-        run: |
-          echo "Running Shell Check"
-          shellcheck *.sh
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-  Dockerfile_Lint_Check:
-    name: Dockerfile Lint Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-      - name: Download Packages
+      - name: Install linters
         run: |
-          sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v2.10.0/hadolint-Linux-x86_64
-          sudo chmod +x /bin/hadolint .
-      - name: Dockerfile Lint
-        run: |
-          hadolint --failure-threshold error --verbose *Dockerfile
-      - name: Docker Compose Lint
-        run: |
-          docker-compose config  || { echo "Invalid Docker Compose file"; exit 1; }
+          sudo apt-get update
+          sudo apt-get install --yes shellcheck yamllint
+          npm install --global markdownlint-cli
 
-  Markdown_Lint_Check:
-    name: Markdown Lint Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install markdownlint-cli
-        run: npm install -g markdownlint-cli
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run markdownlint
-        run: |
-          echo "Running markdownlint"
-          markdownlint '**/*.md'
+      - name: Lint shell script
+        run: shellcheck setup.sh
 
-  YAML_Lint_Check:
-    name: YAML Lint Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install yamllint
-        run: sudo apt install yamllint
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Run yamllint
-        run: |
-          echo "Checking YAML files"
-          yamllint -c .yamllint.yaml .github/**/**.yaml
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+          failure-threshold: error
+
+      - name: Validate Compose file
+        run: docker compose config --quiet
+
+      - name: Lint YAML
+        run: yamllint -c .yamllint.yaml docker-compose.yml .github/workflows
+
+      - name: Lint Markdown
+        run: markdownlint '**/*.md'

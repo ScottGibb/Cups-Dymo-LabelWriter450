@@ -1,4 +1,7 @@
-*.yml
-Dockerfile
-*.md
+.git
 .github
+.dockerignore
+.gitignore
+docs
+README.md
+test.txt

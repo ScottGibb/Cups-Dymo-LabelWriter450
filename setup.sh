@@ -1,33 +1,91 @@
-#!/bin/bash
-# Launch cupds in the foreground
-echo "Starting Cups Demon"
-/usr/sbin/cupsd
+#!/bin/sh
 
-echo "Cups Information:"
-#Print Cups Info
-lpinfo -v
+set -eu
 
-echo "Adding Printer to Cups"
-# Add the printer
-lpadmin -p dymo -v usb://DYMO/LabelWriter%20450?serial=01010112345600 -P /usr/share/cups/model/lw450.ppd
+PRINTER_NAME="${PRINTER_NAME:-dymo}"
+PRINTER_MODEL="${PRINTER_MODEL:-dymo:0/cups/model/lw450.ppd}"
+PRINTER_URI="${PRINTER_URI:-}"
+DISCOVERY_INTERVAL_SECONDS="${DISCOVERY_INTERVAL_SECONDS:-10}"
 
-echo "Print Cups Stats"
-# Stats
-lpstat -v
+case "$DISCOVERY_INTERVAL_SECONDS" in
+    *[!0-9]* | '')
+        echo "DISCOVERY_INTERVAL_SECONDS must be a positive whole number" >&2
+        exit 64
+        ;;
+esac
 
-echo "Start Dymo Printer and accept new Jobs"
-# Start and Accept Jobs
-cupsenable dymo
-cupsaccept dymo
+if [ "$DISCOVERY_INTERVAL_SECONDS" -eq 0 ]; then
+    echo "DISCOVERY_INTERVAL_SECONDS must be greater than zero" >&2
+    exit 64
+fi
 
-echo "Setting Default Printer"
-# Set Default Printer
-lpoptions -d dymo
+stop_cups() {
+    if kill -0 "$CUPSD_PID" 2>/dev/null; then
+        kill -TERM "$CUPSD_PID"
+        wait "$CUPSD_PID"
+    fi
+}
 
-echo "Finished Setup! XD"
+wait_for_cups() {
+    attempts=0
 
-# Test Print
-lp -d dymo test.txt
+    until lpstat -r 2>/dev/null | grep -q "scheduler is running"; do
+        if ! kill -0 "$CUPSD_PID" 2>/dev/null; then
+            wait "$CUPSD_PID"
+            exit $?
+        fi
 
-# Keep the container running
-/usr/sbin/cupsd -f
+        attempts=$((attempts + 1))
+        if [ "$attempts" -ge 30 ]; then
+            echo "CUPS did not start within 30 seconds" >&2
+            exit 1
+        fi
+        sleep 1
+    done
+}
+
+discover_printer_uri() {
+    lpinfo -v 2>/dev/null \
+        | awk '$1 == "direct" && $2 ~ /^usb:\/\/DYMO\// { print $2; exit }'
+}
+
+configure_printer() {
+    printer_uri="$PRINTER_URI"
+
+    if [ -z "$printer_uri" ]; then
+        printer_uri="$(discover_printer_uri)"
+    fi
+
+    if [ -z "$printer_uri" ]; then
+        echo "No DYMO USB printer found; retrying in ${DISCOVERY_INTERVAL_SECONDS}s"
+        return 1
+    fi
+
+    echo "Configuring ${PRINTER_NAME} at ${printer_uri}"
+    lpadmin -p "$PRINTER_NAME" -E -v "$printer_uri" -m "$PRINTER_MODEL" \
+        -o printer-is-shared=true
+    lpadmin -d "$PRINTER_NAME"
+    cupsenable "$PRINTER_NAME"
+    cupsaccept "$PRINTER_NAME"
+
+    echo "Configured printer queue: ${PRINTER_NAME}"
+    lpstat -v "$PRINTER_NAME"
+}
+
+trap 'stop_cups; exit 0' INT TERM
+
+echo "Starting CUPS"
+cupsd -f &
+CUPSD_PID=$!
+
+wait_for_cups
+
+until configure_printer; do
+    if ! kill -0 "$CUPSD_PID" 2>/dev/null; then
+        wait "$CUPSD_PID"
+        exit $?
+    fi
+    sleep "$DISCOVERY_INTERVAL_SECONDS"
+done
+
+wait "$CUPSD_PID"

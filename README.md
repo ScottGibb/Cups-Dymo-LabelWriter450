@@ -1,71 +1,85 @@
-# Cups_Dymo-450
+# CUPS server for a DYMO LabelWriter 450
 
-[![Static-Analysis](https://github.com/ScottGibb/Cups_Dymo-450/actions/workflows/Static%20Analysis.yaml/badge.svg)](https://github.com/ScottGibb/Cups_Dymo-450/actions/workflows/Static%20Analysis.yaml)
-[![Build](https://github.com/ScottGibb/Cups_Dymo-450/actions/workflows/Build.yaml/badge.svg)](https://github.com/ScottGibb/Cups_Dymo-450/actions/workflows/Build.yaml)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+Run a network-accessible CUPS queue for a USB-connected DYMO LabelWriter 450
+on a Raspberry Pi. The image uses Debian's packaged `printer-driver-dymo`
+driver, automatically discovers the connected DYMO USB device, and exposes the
+shared queue over IPP.
 
-<center>
-<img src= "docs/Languages And Tools.png">
-</center>
+## What changed
 
-## Summary
+The previous implementation depended on an old HTTP driver download, compiled
+an unmaintained SDK during every build, started CUPS twice, hard-coded a
+fictional printer serial number, and printed a label whenever the container
+restarted. Those behaviours made startup fragile and could create unwanted
+labels.
 
-This repository contains a Dockerfile which runs CUPS on Raspberry Pi. This project was aimed at making the Dymo LabelWriter 450 Wireless by adding a Raspberry Pi Zero to the setup.
+This version instead:
 
-## Architecture
+- uses the maintained Debian CUPS driver package;
+- discovers the real `usb://DYMO/...` URI at runtime, with an optional override;
+- starts one supervised CUPS process and waits until it is ready;
+- retries safely if the USB printer is plugged in later;
+- shares the queue as `dymo` over IPP; and
+- never submits a print job by itself.
 
-The architecture of this project is as follows:
+## Requirements
 
-<center>
-<img src= "docs/Architecture.png">
-</center>
+- A Raspberry Pi connected to the LabelWriter 450 by USB.
+- A container runtime that supports the Pi. The original Raspberry Pi Zero W is
+  ARMv6; the image is built for the compatible `linux/arm/v5` platform.
+- Docker Compose v2 (`docker compose`) on the Raspberry Pi.
 
-The key parts are as follows:
+> Docker Desktop on macOS can validate the Compose file, but cannot validate
+> this USB printer. Use the Raspberry Pi for the runtime steps below.
 
-- Raspberry Pi Zero W: Responsible for running CUPS and the Dymo LabelWriter 450 Drivers inside a Docker container.
+## Start it on the Raspberry Pi
 
-- Dymo LabelWriter 450: The printer is connected to the Raspberry Pi Zero W via USB.
-
-- PC: The PC is connected to the Local Area Network. This is where the user will be printing from.
-
-The container is designed so that the full installation is done as soon as the container is started. As long as the USB Cable is plugged into the printer, the container should immediately attach this printer to CUPS and set it to the default printer.
-
-## Installation
-
-As for installing the software, the best way of installing this is to use the Dockerfile provided in this repository. This will build the image and run the container. The steps for this are as follows:
-
-1. Clone the repository to the Raspberry Pi Zero W.
-2. Run the following command to build the image and run the container, using the docker-compose.yml file, the --build will force the building of the container using the Dockerfile:
-
-    ```bash
-    docker-compose up -d --build
-    ```
-
-3. The container should now be running and the printer should be available on the network.
-4. To check that the container is running, run the following command:
-
-```bash
-docker ps
+```sh
+git clone https://github.com/ScottGibb/Cups_Dymo-450.git
+cd Cups_Dymo-450
+cp .env.example .env
+docker compose up -d --build
+docker compose logs --follow cups
 ```
 
-## Continuous Integration Pipelines
+Once the logs report `Configured printer queue: dymo`, check the queue:
 
-Within this repository, there are two workflows:
+```sh
+docker compose exec cups lpstat -t
+```
 
-- Static Analysis: This performs Linting on all the main filetypes of this repository such as Dockerfiles, Markdown files and Shell Scripts.
+The CUPS web interface is available at `http://<pi-hostname-or-ip>:631`. Add
+the shared printer from another computer using:
 
-- Build: This performs the building of the Docker Image ensuring that it can be built. This is done using a Self-hosted GitHub Runner.
+```text
+ipp://<pi-hostname-or-ip>:631/printers/dymo
+```
 
-## Useful Links
+## Configuration
 
-This project was inspired by lots of other repositories and open-source projects, which are linked below:
+The defaults in `docker-compose.yml` target a standard LabelWriter 450. Copy
+`.env.example` to `.env` only when you need to pin the detected USB device,
+rename the queue, or select another supported DYMO model.
 
-- [Dymo LabelWriter 450](https://www.dymo.com/label-makers-printers/labelwriter-label-printers/dymo-labelwriter-450-direct-thermal-label-printer/SP_95488.html)
+The setup script looks for the first `usb://DYMO/...` device reported by CUPS.
+When several DYMO printers are connected, set `PRINTER_URI` to the exact URI
+shown by:
 
-- [CUPS](https://ubuntu.com/server/docs/service-cups)
+```sh
+docker compose exec cups lpinfo -v
+```
 
-- [Install Dymo LabelWriter on Headless Linux](https://www.baitando.com/it/2017/12/12/install-dymo-labelwriter-on-headless-linux)
+## Support and diagnostics
 
-- [CUPS Dockerfile](https://github.com/olbat/dockerfiles/tree/master/cupsd)
+See [Raspberry Pi deployment and troubleshooting](docs/troubleshooting.md) for
+hardware checks, a manual test print, and recovery steps.
 
-- [Windows 10 and CUPS](https://techblog.paalijarvi.fi/2020/05/25/making-windows-10-to-print-to-a-cups-printer-over-the-network/)
+## Continuous integration
+
+GitHub Actions lints the shell, Dockerfile, Compose, YAML, and Markdown files.
+It also builds the image as `linux/arm/v5`, which is compatible with the
+original ARMv6 Raspberry Pi Zero W.
+
+## License
+
+GPL-3.0-or-later.

@@ -1,14 +1,22 @@
-version: "3"
+---
 
 services:
-    cups:
-        build: . 
-        container_name: Cups
-        restart: unless-stopped
-        stdin_open: true
-        tty: true
-        ports:
-            - "631:631"
-        devices:
-            - /dev/bus/usb:/dev/bus/usb
-      
+  cups:
+    build:
+      context: .
+    container_name: dymo-cups
+    restart: unless-stopped
+    ports:
+      - "631:631"
+    devices:
+      - /dev/bus/usb:/dev/bus/usb
+    environment:
+      PRINTER_NAME: ${PRINTER_NAME:-dymo}
+      PRINTER_MODEL: ${PRINTER_MODEL:-dymo:0/cups/model/lw450.ppd}
+      PRINTER_URI: ${PRINTER_URI:-}
+      DISCOVERY_INTERVAL_SECONDS: ${DISCOVERY_INTERVAL_SECONDS:-10}
+    volumes:
+      - cups-spool:/var/spool/cups
+
+volumes:
+  cups-spool:
