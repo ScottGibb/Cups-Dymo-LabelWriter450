@@ -1,0 +1,30 @@
+---
+# Configuration modelled on ScottGibb/Home-Lab-Containers.
+
+APPLY_FIXES: all
+
+ENABLE_LINTERS:
+  - ACTION_ACTIONLINT
+  - DOCKERFILE_DCLINT
+  - DOCKERFILE_HADOLINT
+  - JSON_JSONLINT
+  - JSON_PRETTIER
+  - MARKDOWN_MARKDOWNLINT
+  - MARKDOWN_MARKDOWN_LINK_CHECK
+  - MARKDOWN_MARKDOWN_TABLE_FORMATTER
+  - SHELL_SHELLCHECK
+  - SHELL_SHFMT
+  - YAML_PRETTIER
+  - YAML_YAMLLINT
+
+SHOW_ELAPSED_TIME: true
+FILEIO_REPORTER: false
+GITHUB_COMMENT_REPORTER: true
+GITHUB_STATUS_REPORTER: true
+VALIDATE_ALL_CODEBASE: true
+OUTPUT_DETAIL: detailed
+
+MARKDOWN_MARKDOWNLINT_CONFIG_FILE: .markdownlint.json
+
+PLUGINS:
+  - "https://raw.githubusercontent.com/wesley-dean/mega-linter-plugin-dclint/refs/heads/main/mega-linter-plugin-dclint/dclint.megalinter-descriptor.yml"

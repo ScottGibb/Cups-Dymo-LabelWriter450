@@ -76,9 +76,13 @@ hardware checks, a manual test print, and recovery steps.
 
 ## Continuous integration
 
-GitHub Actions lints the shell, Dockerfile, Compose, YAML, and Markdown files.
-It also builds the image as `linux/arm/v5`, which is compatible with the
+GitHub Actions uses MegaLinter for shell, Dockerfile, YAML, JSON, Markdown, and
+workflow checks. It creates a separate pull request when auto-formatting is
+needed and builds the image as `linux/arm/v5`, which is compatible with the
 original ARMv6 Raspberry Pi Zero W.
+
+Dependabot checks GitHub Actions and the Docker base image every week. Release
+Please generates release pull requests from Conventional Commits.
 
 ## License
 

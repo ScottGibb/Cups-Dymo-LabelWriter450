@@ -1,2 +1,4 @@
 *.bkp
 *.dtmp
+*.DS_Store
+megalinter-reports/

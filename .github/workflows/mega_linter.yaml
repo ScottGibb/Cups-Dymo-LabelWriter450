@@ -1,0 +1,104 @@
+---
+
+name: MegaLinter
+
+'on':
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_call:
+
+env:
+  APPLY_FIXES: all
+  APPLY_FIXES_EVENT: pull_request
+  APPLY_FIXES_MODE: pull_request
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  megalinter:
+    name: MegaLinter
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      statuses: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Run MegaLinter
+        id: ml
+        uses: oxsecurity/megalinter/flavors/documentation@v9
+        env:
+          VALIDATE_ALL_CODEBASE: true
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Archive MegaLinter reports
+        uses: actions/upload-artifact@v7
+        if: success() || failure()
+        with:
+          name: MegaLinter reports
+          path: |
+            megalinter-reports
+            mega-linter.log
+
+      - name: Create pull request with applied fixes
+        id: cpr
+        if: >-
+          steps.ml.outputs.has_updated_sources == 1 &&
+          (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) &&
+          env.APPLY_FIXES_MODE == 'pull_request' &&
+          (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) &&
+          !contains(github.event.head_commit.message, 'skip fix')
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          commit-message: "style: :art: Applied MegaLinter Changes"
+          title: "[MegaLinter] Apply linters automatic fixes"
+          labels: bot
+          branch: megalinter-fixes-${{ github.head_ref }}
+          body: |
+            MegaLinter has automatically applied linters fixes on this PR.
+            Please review the changes and merge if they are correct.
+          base: ${{ github.head_ref }}
+
+      - name: Post pull request comment
+        if: >-
+          steps.ml.outputs.has_updated_sources == 1 &&
+          (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) &&
+          env.APPLY_FIXES_MODE == 'pull_request' &&
+          (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) &&
+          !contains(github.event.head_commit.message, 'skip fix')
+        uses: marocchino/sticky-pull-request-comment@v3
+        with:
+          message: |
+            MegaLinter has automatically applied linters fixes on this PR.
+            Please review the changes and merge if they are correct.
+            PR: ${{ steps.cpr.outputs.pull-request-url }}
+          hide_and_recreate: true
+
+      - name: Fail when an automated-fix pull request was created
+        if: >-
+          steps.ml.outputs.has_updated_sources == 1 &&
+          (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) &&
+          env.APPLY_FIXES_MODE == 'pull_request' &&
+          (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) &&
+          !contains(github.event.head_commit.message, 'skip fix')
+        run: |
+          if [ "${{ steps.cpr.outputs.pull-request-url }}" != "" ]; then
+            echo "A pull request with formatting fixes has been created."
+            exit 1
+          fi

@@ -1,0 +1,21 @@
+# Keep GitHub Actions and the Docker base image current. Dependabot uses
+# conventional commit prefixes so release-please can classify updates.
+---
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/.github/workflows/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: chore
+      include: scope
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: chore
+      include: scope

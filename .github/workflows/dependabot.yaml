@@ -1,0 +1,36 @@
+---
+
+name: Dependabot auto merge
+
+'on':
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  merge-github-actions:
+    if: >-
+      github.actor == 'dependabot[bot]' &&
+      contains(join(github.event.pull_request.labels.*.name), 'github_actions')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fastify/github-action-merge-dependabot@v3
+        with:
+          github-token: ${{ secrets.dependabot }}
+          merge-method: rebase
+
+  merge-semver-minor:
+    if: >-
+      github.actor == 'dependabot[bot]' &&
+      !contains(join(github.event.pull_request.labels.*.name), 'github_actions')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fastify/github-action-merge-dependabot@v3
+        with:
+          github-token: ${{ secrets.dependabot }}
+          merge-method: rebase
+          target: minor
