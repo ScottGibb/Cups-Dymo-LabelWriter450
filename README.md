@@ -1,5 +1,9 @@
 # CUPS server for a DYMO LabelWriter 450
 
+[![Build Raspberry Pi images](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/Build.yaml/badge.svg)](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/Build.yaml)
+[![MegaLinter](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/mega_linter.yaml/badge.svg)](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/mega_linter.yaml)
+[![Release Please](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/release_please.yaml/badge.svg)](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/release_please.yaml)
+
 Run a network-accessible CUPS queue for a USB-connected DYMO LabelWriter 450
 on a Raspberry Pi. The image uses Debian's packaged `printer-driver-dymo`
 driver, automatically discovers the connected DYMO USB device, and exposes the
