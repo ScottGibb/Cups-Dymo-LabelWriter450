@@ -1,8 +1,6 @@
 # CUPS server for a DYMO LabelWriter 450
 
-[![Build Raspberry Pi images](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/Build.yaml/badge.svg)](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/Build.yaml)
-[![MegaLinter](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/mega_linter.yaml/badge.svg)](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/mega_linter.yaml)
-[![Release Please](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/release_please.yaml/badge.svg)](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/release_please.yaml)
+[![Build Raspberry Pi images](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/Build.yaml/badge.svg)](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/Build.yaml) [![MegaLinter](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/mega_linter.yaml/badge.svg)](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/mega_linter.yaml) [![Release Please](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/release_please.yaml/badge.svg)](https://github.com/ScottGibb/Cups-Dymo-LabelWriter450/actions/workflows/release_please.yaml)
 
 Run a network-accessible CUPS queue for a USB-connected DYMO LabelWriter 450
 on a Raspberry Pi. The image uses Debian's packaged `printer-driver-dymo`
@@ -64,14 +62,26 @@ Once the logs report `Configured printer queue: dymo`, check the queue:
 docker compose exec cups lpstat -t
 ```
 
-The printer should then appear automatically on Macs as
-`DYMO LabelWriter 450 @ <pi-hostname>`. On a Mac, it can be found under
-**System Settings > Printers & Scanners > Add Printer, Scanner or Fax**.
-Follow [Add the DYMO printer correctly on macOS](docs/macos-setup.md) before
-printing. The critical step is **Use > Select Software > DYMO LabelWriter
-450**; do not accept AirPrint or Generic PostScript if you need the named DYMO
-label stocks. Then run the documented macOS helper so printer-ready output is
-sent to the Pi as raw data instead of being processed by the DYMO filter twice.
+## Add it on a client computer
+
+Use the model-specific DYMO LabelWriter 450 driver on each client that needs
+the named label stocks. Then apply that platform's helper so the printer-ready
+output reaches the Pi as raw data and is not processed by the DYMO filter
+twice.
+
+| Client  | Setup guide                            | Helper                                |
+| ------- | -------------------------------------- | ------------------------------------- |
+| macOS   | [macOS setup](docs/macos-setup.md)     | `scripts/configure-macos-queue.sh`    |
+| Linux   | [Linux setup](docs/linux-setup.md)     | `scripts/configure-linux-queue.sh`    |
+| Windows | [Windows setup](docs/windows-setup.md) | `scripts/configure-windows-queue.ps1` |
+
+Do not accept AirPrint, IPP Everywhere, Microsoft IPP Class Driver, Generic
+PostScript, or another generic driver when you need the named DYMO stocks. The
+guides explain how each operating system combines its DYMO driver with the
+network queue without double-filtering jobs.
+
+Macs and Linux desktops with DNS-SD support can discover the Bonjour queue as
+`DYMO LabelWriter 450 @ <pi-hostname>`. Windows can use the address directly.
 
 Confirm the Bonjour record from macOS with:
 
@@ -79,8 +89,8 @@ Confirm the Bonjour record from macOS with:
 ippfind -T 10 _ipp._tcp _ipps._tcp --ls
 ```
 
-The CUPS web interface is available at `http://<pi-hostname-or-ip>:631`. Add
-the shared printer manually if Bonjour discovery is unavailable using:
+The CUPS web interface is available at `http://<pi-hostname-or-ip>:631`. The
+shared printer's standard IPP address is:
 
 ```text
 ipp://<pi-hostname-or-ip>:631/printers/dymo
@@ -107,18 +117,19 @@ docker compose exec cups lpinfo -v
 
 ## Support and diagnostics
 
-See [Add the DYMO printer correctly on macOS](docs/macos-setup.md) for client
-setup and driver verification. See
+Use the [macOS](docs/macos-setup.md), [Linux](docs/linux-setup.md), or
+[Windows](docs/windows-setup.md) client guide for driver and queue setup. See
 [Raspberry Pi deployment and troubleshooting](docs/troubleshooting.md) for
 hardware checks, a manual test print, and recovery steps.
 
 ## Continuous integration
 
 GitHub Actions uses MegaLinter for shell, Dockerfile, YAML, JSON, Markdown, and
-workflow checks. It creates a separate pull request when auto-formatting is
-needed and validates image builds for `linux/arm/v5`, `linux/arm/v7`, and
-`linux/arm64`. These cover the original Raspberry Pi Zero W, 32-bit Pi 4, and
-64-bit Pi 4 and Pi 5 systems.
+workflow checks, and parses the Windows PowerShell helper for syntax errors. It
+creates a separate pull request when auto-formatting is needed and validates
+image builds for `linux/arm/v5`, `linux/arm/v7`, and `linux/arm64`. These cover
+the original Raspberry Pi Zero W, 32-bit Pi 4, and 64-bit Pi 4 and Pi 5
+systems.
 
 Dependabot checks GitHub Actions and the Docker base image every week. Release
 Please generates release pull requests from Conventional Commits.

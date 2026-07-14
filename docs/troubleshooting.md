@@ -64,16 +64,17 @@ The container deliberately never prints a test label automatically.
 
 ## Add the shared printer from another computer
 
-On Macs, the printer should appear automatically as
-`DYMO LabelWriter 450 @ <pi-hostname>`. Verify the advertisement from a Mac:
+On Macs and Linux desktops with DNS-SD support, the printer should appear as
+`DYMO LabelWriter 450 @ <pi-hostname>`. Verify the advertisement with:
 
 ```sh
 ippfind -T 10 _ipp._tcp _ipps._tcp --ls
 ```
 
-Follow [Add the DYMO printer correctly on macOS](macos-setup.md) when creating
-the local queue. Bonjour discovery does not guarantee that macOS selects the
-DYMO driver automatically.
+Follow the platform-specific [macOS](macos-setup.md),
+[Linux](linux-setup.md), or [Windows](windows-setup.md) setup guide. Discovery
+does not guarantee that the client selects the DYMO driver or transports its
+printer-ready output correctly.
 
 Use this IPP address, replacing `raspberrypi.local` and `dymo` if you changed
 the hostname or `PRINTER_NAME`, when manual configuration is needed:
@@ -134,6 +135,45 @@ grep '^\*cupsFilter' /etc/cups/ppd/DYMO_LabelWriter_450.ppd
 The output must be a `cupsFilter2` declaration containing
 `application/vnd.cups-raw`. If the printer is later removed and re-added, run
 the helper again.
+
+### Linux shows generic sizes or a job is filtered twice
+
+An auto-discovered `implicitclass://` queue or a queue using IPP Everywhere
+does not provide the required local DYMO driver path. A persistent queue with
+the stock Linux DYMO PPD can expose the labels but still describes its final
+output as CUPS Raster, causing the same double-filter failure as an unmodified
+Mac queue.
+
+Follow the [Linux setup guide](linux-setup.md) to create an explicit IPP queue
+with `dymo:0/cups/model/lw450.ppd`, then run:
+
+```sh
+sudo ./scripts/configure-linux-queue.sh DYMO_LabelWriter_450
+```
+
+The helper refuses temporary, generic, USB, or active queues and automatically
+restores the original PPD if verification fails. It does not require a Pi image
+rebuild and does not print a test label.
+
+### Windows does not show the DYMO stocks
+
+`Add-Printer -IppURL` creates a Microsoft IPP Class Driver queue. For this
+legacy LabelWriter, that can omit the model-specific label definitions. Install
+the DYMO driver, close or finish jobs on the incorrect queue, and run the
+[Windows setup helper](windows-setup.md) from an elevated Windows PowerShell:
+
+```powershell
+.\scripts\configure-windows-queue.ps1 -Replace
+```
+
+The result must use the DYMO LabelWriter 450 driver, a port ending in
+`/printers/dymo/.printer`, and the `RAW` datatype. The helper will not use a
+Standard TCP/IP port because TCP 631 on the Pi expects IPP, not a raw socket
+stream.
+
+If the helper cannot find the DYMO driver, install it from DYMO first. Windows
+Protected Print Mode must be off because it blocks third-party printer drivers;
+the helper reports this requirement but never changes the setting itself.
 
 ### No DYMO USB printer found
 

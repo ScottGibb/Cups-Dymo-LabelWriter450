@@ -1,8 +1,7 @@
 ---
-
 name: MegaLinter
 
-'on':
+"on":
   push:
     branches:
       - main
@@ -39,6 +38,22 @@ jobs:
           token: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
+      - name: Check PowerShell syntax
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $parseErrors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            (Resolve-Path scripts/configure-windows-queue.ps1),
+            [ref] $tokens,
+            [ref] $parseErrors
+          ) > $null
+
+          if ($parseErrors.Count -gt 0) {
+            $parseErrors | ForEach-Object { Write-Error $_.Message }
+            exit 1
+          }
+
       - name: Run MegaLinter
         id: ml
         uses: oxsecurity/megalinter/flavors/documentation@v9
@@ -59,9 +74,11 @@ jobs:
         id: cpr
         if: >-
           steps.ml.outputs.has_updated_sources == 1 &&
-          (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) &&
+          (env.APPLY_FIXES_EVENT == 'all' ||
+          env.APPLY_FIXES_EVENT == github.event_name) &&
           env.APPLY_FIXES_MODE == 'pull_request' &&
-          (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) &&
+          (github.event_name == 'push' ||
+          github.event.pull_request.head.repo.full_name == github.repository) &&
           !contains(github.event.head_commit.message, 'skip fix')
         uses: peter-evans/create-pull-request@v8
         with:
@@ -78,9 +95,11 @@ jobs:
       - name: Post pull request comment
         if: >-
           steps.ml.outputs.has_updated_sources == 1 &&
-          (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) &&
+          (env.APPLY_FIXES_EVENT == 'all' ||
+          env.APPLY_FIXES_EVENT == github.event_name) &&
           env.APPLY_FIXES_MODE == 'pull_request' &&
-          (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) &&
+          (github.event_name == 'push' ||
+          github.event.pull_request.head.repo.full_name == github.repository) &&
           !contains(github.event.head_commit.message, 'skip fix')
         uses: marocchino/sticky-pull-request-comment@v3
         with:
@@ -93,9 +112,11 @@ jobs:
       - name: Fail when an automated-fix pull request was created
         if: >-
           steps.ml.outputs.has_updated_sources == 1 &&
-          (env.APPLY_FIXES_EVENT == 'all' || env.APPLY_FIXES_EVENT == github.event_name) &&
+          (env.APPLY_FIXES_EVENT == 'all' ||
+          env.APPLY_FIXES_EVENT == github.event_name) &&
           env.APPLY_FIXES_MODE == 'pull_request' &&
-          (github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository) &&
+          (github.event_name == 'push' ||
+          github.event.pull_request.head.repo.full_name == github.repository) &&
           !contains(github.event.head_commit.message, 'skip fix')
         run: |
           if [ "${{ steps.cpr.outputs.pull-request-url }}" != "" ]; then
