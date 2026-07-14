@@ -33,6 +33,10 @@ The first successful startup prints `Configured printer queue: dymo` in the
 container logs. The service stays running and retries every ten seconds when
 the printer is connected after the container starts.
 
+The logs also report whether the host D-Bus socket is available for Bonjour
+advertisement. CUPS uses that socket to register the queue with the existing
+Avahi daemon on the Raspberry Pi.
+
 ## Verify the printer queue
 
 ```sh
@@ -51,8 +55,15 @@ The container deliberately never prints a test label automatically.
 
 ## Add the shared printer from another computer
 
+On Apple devices, the printer should appear automatically as
+`DYMO LabelWriter 450 @ <pi-hostname>`. Verify the advertisement from a Mac:
+
+```sh
+ippfind -T 10 _ipp._tcp --ls
+```
+
 Use this IPP address, replacing `raspberrypi.local` and `dymo` if you changed
-the hostname or `PRINTER_NAME`:
+the hostname or `PRINTER_NAME`, when manual configuration is needed:
 
 ```text
 ipp://raspberrypi.local:631/printers/dymo
@@ -94,3 +105,27 @@ docker compose exec cups lpstat -t
 
 The built-in Debian `printer-driver-dymo` package owns the driver and model
 definition; there is no separate DYMO SDK download or source compilation step.
+
+### The printer does not appear over Bonjour
+
+The Pi must run Avahi, and the container must be able to reach it through the
+host system D-Bus socket. Check all three points on the Pi:
+
+```sh
+systemctl is-active avahi-daemon
+test -S /run/dbus/system_bus_socket
+docker compose exec cups test -S /run/dbus/system_bus_socket
+```
+
+If Avahi is installed but inactive, enable it and recreate the container:
+
+```sh
+sudo systemctl enable --now avahi-daemon
+docker compose up -d --force-recreate
+```
+
+Bonjour uses multicast UDP port 5353 on the local network. Guest Wi-Fi, client
+isolation, VLAN boundaries, and restrictive firewalls can prevent discovery
+even while direct IPP printing on TCP port 631 still works. A Pi connected by
+both Ethernet and Wi-Fi may advertise the same service on both interfaces; this
+is expected.

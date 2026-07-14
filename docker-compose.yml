@@ -11,11 +11,19 @@ services:
     devices:
       - /dev/bus/usb:/dev/bus/usb
     environment:
+      DBUS_SYSTEM_BUS_ADDRESS: unix:path=/run/dbus/system_bus_socket
       PRINTER_NAME: ${PRINTER_NAME:-dymo}
+      PRINTER_DESCRIPTION: ${PRINTER_DESCRIPTION:-DYMO LabelWriter 450}
       PRINTER_MODEL: ${PRINTER_MODEL:-dymo:0/cups/model/lw450.ppd}
       PRINTER_URI: ${PRINTER_URI:-}
       DISCOVERY_INTERVAL_SECONDS: ${DISCOVERY_INTERVAL_SECONDS:-10}
     volumes:
+      - type: bind
+        source: /run/dbus/system_bus_socket
+        target: /run/dbus/system_bus_socket
+        read_only: true
+        bind:
+          create_host_path: false
       - cups-spool:/var/spool/cups
 
 volumes:

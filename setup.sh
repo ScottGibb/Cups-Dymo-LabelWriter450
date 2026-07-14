@@ -3,6 +3,7 @@
 set -eu
 
 PRINTER_NAME="${PRINTER_NAME:-dymo}"
+PRINTER_DESCRIPTION="${PRINTER_DESCRIPTION:-DYMO LabelWriter 450}"
 PRINTER_MODEL="${PRINTER_MODEL:-dymo:0/cups/model/lw450.ppd}"
 PRINTER_URI="${PRINTER_URI:-}"
 DISCOVERY_INTERVAL_SECONDS="${DISCOVERY_INTERVAL_SECONDS:-10}"
@@ -62,8 +63,8 @@ configure_printer() {
     fi
 
     echo "Configuring ${PRINTER_NAME} at ${printer_uri}"
-    lpadmin -p "$PRINTER_NAME" -E -v "$printer_uri" -m "$PRINTER_MODEL" \
-        -o printer-is-shared=true
+    lpadmin -p "$PRINTER_NAME" -E -D "$PRINTER_DESCRIPTION" \
+        -v "$printer_uri" -m "$PRINTER_MODEL" -o printer-is-shared=true
     lpadmin -d "$PRINTER_NAME"
     cupsenable "$PRINTER_NAME"
     cupsaccept "$PRINTER_NAME"
@@ -73,6 +74,12 @@ configure_printer() {
 }
 
 trap 'stop_cups; exit 0' INT TERM
+
+if [ -S /run/dbus/system_bus_socket ]; then
+    echo "Host D-Bus is available for Bonjour advertisement through Avahi"
+else
+    echo "Warning: host D-Bus is unavailable; Bonjour advertisement is disabled" >&2
+fi
 
 echo "Starting CUPS"
 cupsd -f &
