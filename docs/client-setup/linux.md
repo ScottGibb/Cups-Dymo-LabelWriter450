@@ -1,4 +1,7 @@
-# Add the DYMO printer correctly on Linux
+# Linux client setup
+
+Run these steps on the Linux computer that sends print jobs to the Raspberry
+Pi CUPS server. Do not run the client helper inside the Pi's CUPS container.
 
 Linux clients need a persistent local CUPS queue with the packaged DYMO
 LabelWriter 450 driver. A temporary `cups-browsed` queue or an IPP Everywhere

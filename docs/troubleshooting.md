@@ -1,8 +1,10 @@
-# Raspberry Pi deployment and troubleshooting
+# Raspberry Pi server deployment and troubleshooting
 
-This project needs to be run on the Raspberry Pi that has the LabelWriter
-connected over USB. A macOS Docker Desktop run cannot validate USB detection
-or print a label.
+This is the server-side guide. Run these steps on the Raspberry Pi that has the
+LabelWriter connected over USB. For the Mac, Linux PC, or Windows PC that sends
+jobs to the Pi, use the [client setup guides](client-setup/README.md).
+
+A macOS Docker Desktop run cannot validate USB detection or print a label.
 
 ## Before starting
 
@@ -62,7 +64,7 @@ printf 'DYMO test\n' | docker compose exec -T cups lp -d dymo
 
 The container deliberately never prints a test label automatically.
 
-## Add the shared printer from another computer
+## Connect a client computer
 
 On Macs and Linux desktops with DNS-SD support, the printer should appear as
 `DYMO LabelWriter 450 @ <pi-hostname>`. Verify the advertisement with:
@@ -71,10 +73,10 @@ On Macs and Linux desktops with DNS-SD support, the printer should appear as
 ippfind -T 10 _ipp._tcp _ipps._tcp --ls
 ```
 
-Follow the platform-specific [macOS](macos-setup.md),
-[Linux](linux-setup.md), or [Windows](windows-setup.md) setup guide. Discovery
-does not guarantee that the client selects the DYMO driver or transports its
-printer-ready output correctly.
+Follow the platform-specific [macOS](client-setup/macos.md),
+[Linux](client-setup/linux.md), or [Windows](client-setup/windows.md) client
+guide. Discovery does not guarantee that the client selects the DYMO driver or
+transports its printer-ready output correctly.
 
 Use this IPP address, replacing `raspberrypi.local` and `dymo` if you changed
 the hostname or `PRINTER_NAME`, when manual configuration is needed:
@@ -102,7 +104,7 @@ lpoptions -p DYMO_LabelWriter_450 -l
 ```
 
 If `PageSize` lists only values such as `Letter`, `Legal`, and `A4`, follow the
-[macOS setup and repair guide](macos-setup.md). Remove the queue and add it
+[macOS client setup and repair guide](client-setup/macos.md). Remove the queue and add it
 again with **Use > Select Software > DYMO LabelWriter 450**. Do not leave the
 queue set to AirPrint or Generic PostScript Printer.
 
@@ -144,7 +146,7 @@ the stock Linux DYMO PPD can expose the labels but still describes its final
 output as CUPS Raster, causing the same double-filter failure as an unmodified
 Mac queue.
 
-Follow the [Linux setup guide](linux-setup.md) to create an explicit IPP queue
+Follow the [Linux client setup guide](client-setup/linux.md) to create an explicit IPP queue
 with `dymo:0/cups/model/lw450.ppd`, then run:
 
 ```sh
@@ -160,7 +162,7 @@ rebuild and does not print a test label.
 `Add-Printer -IppURL` creates a Microsoft IPP Class Driver queue. For this
 legacy LabelWriter, that can omit the model-specific label definitions. Install
 the DYMO driver, close or finish jobs on the incorrect queue, and run the
-[Windows setup helper](windows-setup.md) from an elevated Windows PowerShell:
+[Windows client setup guide](client-setup/windows.md) from an elevated Windows PowerShell:
 
 ```powershell
 .\scripts\configure-windows-queue.ps1 -Replace

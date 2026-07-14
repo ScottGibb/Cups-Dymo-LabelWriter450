@@ -62,18 +62,18 @@ Once the logs report `Configured printer queue: dymo`, check the queue:
 docker compose exec cups lpstat -t
 ```
 
-## Add it on a client computer
+## Client setup
 
-Use the model-specific DYMO LabelWriter 450 driver on each client that needs
-the named label stocks. Then apply that platform's helper so the printer-ready
-output reaches the Pi as raw data and is not processed by the DYMO filter
-twice.
+These steps run on the Mac, Linux PC, or Windows PC that sends jobs to the Pi;
+they do not run inside the Raspberry Pi CUPS container. Start with the
+[client setup overview](docs/client-setup/README.md), install the
+model-specific DYMO LabelWriter 450 driver, and apply that platform's helper.
 
-| Client  | Setup guide                            | Helper                                |
-| ------- | -------------------------------------- | ------------------------------------- |
-| macOS   | [macOS setup](docs/macos-setup.md)     | `scripts/configure-macos-queue.sh`    |
-| Linux   | [Linux setup](docs/linux-setup.md)     | `scripts/configure-linux-queue.sh`    |
-| Windows | [Windows setup](docs/windows-setup.md) | `scripts/configure-windows-queue.ps1` |
+| Client  | Setup guide                                          | Helper                                |
+| ------- | ---------------------------------------------------- | ------------------------------------- |
+| macOS   | [macOS client setup](docs/client-setup/macos.md)     | `scripts/configure-macos-queue.sh`    |
+| Linux   | [Linux client setup](docs/client-setup/linux.md)     | `scripts/configure-linux-queue.sh`    |
+| Windows | [Windows client setup](docs/client-setup/windows.md) | `scripts/configure-windows-queue.ps1` |
 
 Do not accept AirPrint, IPP Everywhere, Microsoft IPP Class Driver, Generic
 PostScript, or another generic driver when you need the named DYMO stocks. The
@@ -117,9 +117,10 @@ docker compose exec cups lpinfo -v
 
 ## Support and diagnostics
 
-Use the [macOS](docs/macos-setup.md), [Linux](docs/linux-setup.md), or
-[Windows](docs/windows-setup.md) client guide for driver and queue setup. See
-[Raspberry Pi deployment and troubleshooting](docs/troubleshooting.md) for
+The [documentation index](docs/README.md) separates Raspberry Pi server tasks
+from client-computer setup. Use the [client setup guides](docs/client-setup/README.md)
+for drivers and local queues, or the
+[Raspberry Pi server troubleshooting guide](docs/troubleshooting.md) for
 hardware checks, a manual test print, and recovery steps.
 
 ## Continuous integration

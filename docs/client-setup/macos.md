@@ -1,4 +1,7 @@
-# Add the DYMO printer correctly on macOS
+# macOS client setup
+
+Run these steps on the Mac that sends print jobs to the Raspberry Pi CUPS
+server. Do not run the client helper inside the Pi's CUPS container.
 
 To expose the named DYMO label stocks, install the DYMO printer software on
 each Mac. Bonjour finds the queue, but macOS can attach the wrong software

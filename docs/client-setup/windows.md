@@ -1,4 +1,7 @@
-# Add the DYMO printer correctly on Windows
+# Windows client setup
+
+Run these steps on the Windows computer that sends print jobs to the Raspberry
+Pi CUPS server. The LabelWriter remains connected to the Pi by USB.
 
 Windows must create the network queue with the model-specific DYMO driver and
 the `RAW` spool datatype. Adding the Pi with `Add-Printer -IppURL` creates a
