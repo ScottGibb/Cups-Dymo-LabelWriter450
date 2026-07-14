@@ -64,12 +64,16 @@ The container deliberately never prints a test label automatically.
 
 ## Add the shared printer from another computer
 
-On Apple devices, the printer should appear automatically as
+On Macs, the printer should appear automatically as
 `DYMO LabelWriter 450 @ <pi-hostname>`. Verify the advertisement from a Mac:
 
 ```sh
-ippfind -T 10 _ipp._tcp --ls
+ippfind -T 10 _ipp._tcp _ipps._tcp --ls
 ```
+
+Follow [Add the DYMO printer correctly on macOS](macos-setup.md) when creating
+the local queue. Bonjour discovery does not guarantee that macOS selects the
+DYMO driver automatically.
 
 Use this IPP address, replacing `raspberrypi.local` and `dymo` if you changed
 the hostname or `PRINTER_NAME`, when manual configuration is needed:
@@ -96,12 +100,10 @@ Check the local queue on the Mac, replacing the queue name when necessary:
 lpoptions -p DYMO_LabelWriter_450 -l
 ```
 
-If `PageSize` lists only values such as `Letter`, `Legal`, and `A4`, remove the
-printer from **System Settings > Printers & Scanners** and add the Bonjour
-printer again. In the add dialog, choose **Use > Select Software > DYMO
-LabelWriter 450** rather than **Generic PostScript Printer**. Apple recommends
-re-adding a printer with different printer software when expected print options
-are missing.
+If `PageSize` lists only values such as `Letter`, `Legal`, and `A4`, follow the
+[macOS setup and repair guide](macos-setup.md). Remove the queue and add it
+again with **Use > Select Software > DYMO LabelWriter 450**. Do not leave the
+queue set to AirPrint or Generic PostScript Printer.
 
 The named label stocks require the DYMO printer software on the Mac. The Pi
 still performs network sharing and accepts the resulting printer-ready job; the

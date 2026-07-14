@@ -51,8 +51,8 @@ image.
 ## Start it on the Raspberry Pi
 
 ```sh
-git clone https://github.com/ScottGibb/Cups_Dymo-450.git
-cd Cups_Dymo-450
+git clone https://github.com/ScottGibb/Cups-Dymo-LabelWriter450.git
+cd Cups-Dymo-LabelWriter450
 cp .env.example .env
 docker compose up -d --build
 docker compose logs --follow cups
@@ -64,19 +64,18 @@ Once the logs report `Configured printer queue: dymo`, check the queue:
 docker compose exec cups lpstat -t
 ```
 
-The printer should then appear automatically on Apple devices as
+The printer should then appear automatically on Macs as
 `DYMO LabelWriter 450 @ <pi-hostname>`. On a Mac, it can be found under
-**System Settings > Printers & Scanners > Add Printer, Scanner, or Fax**.
-Before selecting **Add**, open **Use**, choose **Select Software**, and select
-**DYMO LabelWriter 450**. Do not leave **Generic PostScript Printer** selected:
-that generic driver exposes office paper sizes instead of DYMO label stocks.
-The DYMO printer software must be installed on the Mac for this choice to be
-available.
+**System Settings > Printers & Scanners > Add Printer, Scanner or Fax**.
+Follow [Add the DYMO printer correctly on macOS](docs/macos-setup.md) before
+printing. The critical step is **Use > Select Software > DYMO LabelWriter
+450**; do not accept AirPrint or Generic PostScript if you need the named DYMO
+label stocks.
 
 Confirm the Bonjour record from macOS with:
 
 ```sh
-ippfind -T 10 _ipp._tcp --ls
+ippfind -T 10 _ipp._tcp _ipps._tcp --ls
 ```
 
 The CUPS web interface is available at `http://<pi-hostname-or-ip>:631`. Add
@@ -107,7 +106,9 @@ docker compose exec cups lpinfo -v
 
 ## Support and diagnostics
 
-See [Raspberry Pi deployment and troubleshooting](docs/troubleshooting.md) for
+See [Add the DYMO printer correctly on macOS](docs/macos-setup.md) for client
+setup and driver verification. See
+[Raspberry Pi deployment and troubleshooting](docs/troubleshooting.md) for
 hardware checks, a manual test print, and recovery steps.
 
 ## Continuous integration
