@@ -84,6 +84,29 @@ from the Raspberry Pi with `docker compose exec cups lpadmin ...`.
 
 ## Common failures
 
+### macOS shows Letter and A4 instead of DYMO label sizes
+
+macOS may add the Bonjour queue as a Generic PostScript Printer. That driver
+contains only general office paper sizes and ignores the label definitions
+advertised by the Pi.
+
+Check the local queue on the Mac, replacing the queue name when necessary:
+
+```sh
+lpoptions -p DYMO_LabelWriter_450 -l
+```
+
+If `PageSize` lists only values such as `Letter`, `Legal`, and `A4`, remove the
+printer from **System Settings > Printers & Scanners** and add the Bonjour
+printer again. In the add dialog, choose **Use > Select Software > DYMO
+LabelWriter 450** rather than **Generic PostScript Printer**. Apple recommends
+re-adding a printer with different printer software when expected print options
+are missing.
+
+The named label stocks require the DYMO printer software on the Mac. The Pi
+still performs network sharing and accepts the resulting printer-ready job; the
+DYMO remains physically connected only to the Pi.
+
 ### No DYMO USB printer found
 
 The container can see only devices explicitly mapped by Compose. Check both the

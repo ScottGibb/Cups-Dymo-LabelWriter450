@@ -54,6 +54,12 @@ docker compose exec cups lpstat -t
 The printer should then appear automatically on Apple devices as
 `DYMO LabelWriter 450 @ <pi-hostname>`. On a Mac, it can be found under
 **System Settings > Printers & Scanners > Add Printer, Scanner, or Fax**.
+Before selecting **Add**, open **Use**, choose **Select Software**, and select
+**DYMO LabelWriter 450**. Do not leave **Generic PostScript Printer** selected:
+that generic driver exposes office paper sizes instead of DYMO label stocks.
+The DYMO printer software must be installed on the Mac for this choice to be
+available.
+
 Confirm the Bonjour record from macOS with:
 
 ```sh
