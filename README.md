@@ -5,6 +5,8 @@ on a Raspberry Pi. The image uses Debian's packaged `printer-driver-dymo`
 driver, automatically discovers the connected DYMO USB device, and exposes the
 shared queue over IPP.
 
+![Project technologies: Raspberry Pi, CUPS, Docker, Docker Compose, and DYMO](docs/Languages%20And%20Tools.png)
+
 - uses the maintained Debian CUPS driver package;
 - discovers the real `usb://DYMO/...` URI at runtime, with an optional override;
 - starts one supervised CUPS process and waits until it is ready;
@@ -12,6 +14,13 @@ shared queue over IPP.
 - shares the queue as `dymo` over IPP;
 - advertises the shared queue over Bonjour using the Pi's Avahi daemon; and
 - never submits a print job by itself.
+
+## Architecture
+
+Network clients send print jobs over IPP to the CUPS container on the Raspberry
+Pi. The Pi passes the processed jobs to the USB-connected LabelWriter 450.
+
+![Architecture: network clients connect to CUPS on a Raspberry Pi, which connects to the DYMO printer over USB](docs/Architecture.png)
 
 ## Requirements
 
