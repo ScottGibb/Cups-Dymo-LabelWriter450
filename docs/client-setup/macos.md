@@ -90,18 +90,19 @@ Use this method if Bonjour discovery is unavailable:
 2. Select **Add Printer, Scanner or Fax**, then select the **IP** tab.
 3. Enter these values:
 
-   | Field    | Value                                         |
-   | -------- | --------------------------------------------- |
-   | Address  | `pilab.local` or the Pi's reserved IP address |
-   | Protocol | **Internet Printing Protocol - IPP**          |
-   | Queue    | `printers/dymo`                               |
-   | Name     | `DYMO LabelWriter 450`                        |
-   | Location | Optional                                      |
-   | Use      | **Select Software > DYMO LabelWriter 450**    |
+   | Field    | Value                                      |
+   | -------- | ------------------------------------------ |
+   | Address  | `<pi-hostname-or-ip>`                      |
+   | Protocol | **Internet Printing Protocol - IPP**       |
+   | Queue    | `printers/dymo`                            |
+   | Name     | `DYMO LabelWriter 450`                     |
+   | Location | Optional                                   |
+   | Use      | **Select Software > DYMO LabelWriter 450** |
 
-   Replace `pilab.local` if the Pi uses a different hostname, and replace
-   `dymo` if `PRINTER_NAME` was changed. Put only the hostname or IP address in
-   **Address**; do not paste the full IPP URL into that field.
+   Replace `<pi-hostname-or-ip>` with the hostname or reserved IP address for
+   your Pi, and replace `dymo` if `PRINTER_NAME` was changed. Put only the
+   hostname or IP address in **Address**; do not paste the full IPP URL into
+   that field.
 
 4. Check the **Use** field again, then select **Add**.
 5. Run the network-queue helper from the previous section.
@@ -109,7 +110,7 @@ Use this method if Bonjour discovery is unavailable:
 The equivalent complete printer URI is:
 
 ```text
-ipp://pilab.local:631/printers/dymo
+ipp://<pi-hostname-or-ip>:631/printers/dymo
 ```
 
 ## Verify the driver before printing

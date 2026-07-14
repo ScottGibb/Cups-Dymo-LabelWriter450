@@ -96,6 +96,10 @@ shared printer's standard IPP address is:
 ipp://<pi-hostname-or-ip>:631/printers/dymo
 ```
 
+Replace `<pi-hostname-or-ip>` with the hostname or reserved IP address for your
+Pi. The client guides store this complete deployment-specific address in an
+`IPP_URI` or `IppUri` variable; the scripts do not assume a site hostname.
+
 ## Configuration
 
 The defaults in `docker-compose.yml` target a standard LabelWriter 450. Copy

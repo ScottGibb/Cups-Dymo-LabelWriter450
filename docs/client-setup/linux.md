@@ -40,29 +40,36 @@ printer manually in the desktop printer settings with this address and select
 **DYMO LabelWriter 450**, or create the queue from a terminal:
 
 ```sh
+IPP_URI='ipp://<pi-hostname-or-ip>:631/printers/dymo'
+
 sudo lpadmin -h localhost -p DYMO_LabelWriter_450 -E \
-  -v 'ipp://pilab.local:631/printers/dymo' \
+  -v "$IPP_URI" \
   -m dymo:0/cups/model/lw450.ppd \
   -o printer-is-shared=false
 ```
 
-Replace `pilab.local` if the Pi has another hostname, and replace `dymo` if
-`PRINTER_NAME` was changed. If `lpinfo -h localhost -m` reports a different
-model identifier for the exact LabelWriter 450, use that identifier after
-`-m`.
+Replace `<pi-hostname-or-ip>` in `IPP_URI` with the hostname or reserved IP
+address for your Pi, and replace `dymo` if `PRINTER_NAME` was changed. If
+`lpinfo -h localhost -m` reports a different model identifier for the exact
+LabelWriter 450, use that identifier after `-m`.
 
 ## Make the queue safe for remote printing
 
 From the repository directory on the Linux client, run:
 
 ```sh
-sudo ./scripts/configure-linux-queue.sh DYMO_LabelWriter_450
+IPP_URI='ipp://<pi-hostname-or-ip>:631/printers/dymo'
+sudo ./scripts/configure-linux-queue.sh DYMO_LabelWriter_450 "$IPP_URI"
 ```
 
-Replace the argument if the local queue has another name. The helper:
+Set `IPP_URI` to the same deployment-specific value used when creating the
+queue, and replace the first argument if the local queue has another name. The
+URI argument is optional for existing automation, but supplying it makes the
+helper refuse a queue that points to a different Pi. The helper:
 
 - targets only the local CUPS scheduler, even when `CUPS_SERVER` is set;
 - accepts only an explicit IPP, IPPS, or DNS-SD network queue;
+- verifies the queue against the supplied Raspberry Pi URI, when provided;
 - verifies the exact LabelWriter 450 PPD and its named label stocks;
 - verifies that the PPD's `raster2dymolw` filter is executable;
 - briefly stops the queue from accepting new jobs, refuses to change the PPD

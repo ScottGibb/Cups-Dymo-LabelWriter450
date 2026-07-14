@@ -78,16 +78,17 @@ Follow the platform-specific [macOS](client-setup/macos.md),
 guide. Discovery does not guarantee that the client selects the DYMO driver or
 transports its printer-ready output correctly.
 
-Use this IPP address, replacing `raspberrypi.local` and `dymo` if you changed
-the hostname or `PRINTER_NAME`, when manual configuration is needed:
+Use this IPP address, replacing `<pi-hostname-or-ip>` and `dymo` with your
+deployment values when manual configuration is needed:
 
 ```text
-ipp://raspberrypi.local:631/printers/dymo
+ipp://<pi-hostname-or-ip>:631/printers/dymo
 ```
 
-The read-only CUPS interface is available at `http://raspberrypi.local:631`.
-Administrative configuration is intentionally restricted; administer the queue
-from the Raspberry Pi with `docker compose exec cups lpadmin ...`.
+The read-only CUPS interface is available at
+`http://<pi-hostname-or-ip>:631`. Administrative configuration is intentionally
+restricted; administer the queue from the Raspberry Pi with
+`docker compose exec cups lpadmin ...`.
 
 ## Common failures
 
@@ -150,7 +151,8 @@ Follow the [Linux client setup guide](client-setup/linux.md) to create an explic
 with `dymo:0/cups/model/lw450.ppd`, then run:
 
 ```sh
-sudo ./scripts/configure-linux-queue.sh DYMO_LabelWriter_450
+IPP_URI='ipp://<pi-hostname-or-ip>:631/printers/dymo'
+sudo ./scripts/configure-linux-queue.sh DYMO_LabelWriter_450 "$IPP_URI"
 ```
 
 The helper refuses temporary, generic, USB, or active queues and automatically
@@ -165,7 +167,8 @@ the DYMO driver, close or finish jobs on the incorrect queue, and run the
 [Windows client setup guide](client-setup/windows.md) from an elevated Windows PowerShell:
 
 ```powershell
-.\scripts\configure-windows-queue.ps1 -Replace
+$IppUri = 'ipp://<pi-hostname-or-ip>:631/printers/dymo'
+.\scripts\configure-windows-queue.ps1 -IppUri $IppUri -Replace
 ```
 
 The result must use the DYMO LabelWriter 450 driver, a port ending in

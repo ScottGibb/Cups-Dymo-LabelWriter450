@@ -12,6 +12,10 @@ and the shared queue is reachable at:
 ipp://<pi-hostname-or-ip>:631/printers/dymo
 ```
 
+Replace `<pi-hostname-or-ip>` with the hostname or reserved IP address of your
+Pi. The Linux and Windows guides store the complete deployment-specific
+address in an `IPP_URI`/`IppUri` variable instead of assuming a hostname.
+
 ## Choose the client operating system
 
 | Client  | Setup guide           | Client-side helper                    |

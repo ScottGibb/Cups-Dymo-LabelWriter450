@@ -5,7 +5,10 @@ set -eu
 LC_ALL=C
 export LC_ALL
 
+# Usage: configure-linux-queue.sh [local-queue-name] [expected-pi-ipp-uri]
+# DYMO_IPP_URI can provide the expected URI when the second argument is omitted.
 QUEUE_NAME="${1:-DYMO_LabelWriter_450}"
+EXPECTED_IPP_URI="${2:-${DYMO_IPP_URI:-}}"
 
 case "$QUEUE_NAME" in
     '' | *[!A-Za-z0-9_.-]*)
@@ -59,6 +62,23 @@ case "$QUEUE_URI" in
         exit 65
         ;;
 esac
+
+if [ -n "$EXPECTED_IPP_URI" ]; then
+    case "$EXPECTED_IPP_URI" in
+        ipp://* | ipps://* | dnssd://*)
+            ;;
+        *)
+            echo "Expected printer URI must use ipp://, ipps://, or dnssd://." >&2
+            exit 64
+            ;;
+    esac
+
+    if [ "$QUEUE_URI" != "$EXPECTED_IPP_URI" ]; then
+        echo "Queue $QUEUE_NAME points to $QUEUE_URI, not $EXPECTED_IPP_URI." >&2
+        echo "Recreate or update the queue with the intended Raspberry Pi URI before continuing." >&2
+        exit 65
+    fi
+fi
 
 if [ -n "$(lpstat -h localhost -o "$QUEUE_NAME")" ]; then
     echo "Queue $QUEUE_NAME still has jobs. Cancel or finish them before changing its driver." >&2
@@ -136,6 +156,9 @@ if [ "$FILTER_COUNT" -eq 1 ] && [ "$SAFE_FILTER_COUNT" -eq 1 ]; then
     fi
 
     echo "Queue $QUEUE_NAME is already configured for network-safe raw output."
+    if [ -n "$EXPECTED_IPP_URI" ]; then
+        echo "Verified the Raspberry Pi queue URI: $EXPECTED_IPP_URI"
+    fi
     exit 0
 fi
 
@@ -274,5 +297,8 @@ if ! restore_acceptance; then
 fi
 
 echo "Configured $QUEUE_NAME to send DYMO-ready data as application/vnd.cups-raw."
+if [ -n "$EXPECTED_IPP_URI" ]; then
+    echo "Verified the Raspberry Pi queue URI: $EXPECTED_IPP_URI"
+fi
 echo "Kept the client queue private to avoid advertising a second forwarding queue."
 echo "No print job was submitted."

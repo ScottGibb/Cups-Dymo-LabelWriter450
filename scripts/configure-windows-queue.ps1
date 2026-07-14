@@ -3,10 +3,14 @@
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
 param(
     [ValidateNotNullOrEmpty()]
-    [string] $PrinterName = 'DYMO LabelWriter 450 @ PiLab',
+    [string] $PrinterName = 'DYMO LabelWriter 450',
 
+    [Parameter(
+        Mandatory = $true,
+        HelpMessage = 'Enter the complete Raspberry Pi IPP queue URI.'
+    )]
     [ValidateNotNullOrEmpty()]
-    [string] $IppUri = 'ipp://pilab.local:631/printers/dymo',
+    [string] $IppUri,
 
     [ValidateNotNullOrEmpty()]
     [string] $DriverName = 'DYMO LabelWriter 450',
@@ -138,6 +142,7 @@ function Test-CupsPrinterEndpoint {
         $ppdUri = ConvertTo-CupsPpdUri -WindowsPort $Uri
         $request = [System.Net.HttpWebRequest]::Create($ppdUri)
         $request.Method = 'GET'
+        $request.AllowAutoRedirect = $false
         $request.Timeout = 5000
         $request.ReadWriteTimeout = 5000
         $response = [System.Net.HttpWebResponse] $request.GetResponse()

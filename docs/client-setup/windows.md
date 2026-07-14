@@ -42,23 +42,47 @@ second time.
 From the repository directory in the elevated Windows PowerShell window:
 
 ```powershell
+$IppUri = 'ipp://<pi-hostname-or-ip>:631/printers/dymo'
+
 .\scripts\configure-windows-queue.ps1 `
-  -PrinterName 'DYMO LabelWriter 450 @ PiLab' `
-  -IppUri 'ipp://pilab.local:631/printers/dymo' `
+  -IppUri $IppUri `
+  -PrinterName 'DYMO LabelWriter 450' `
   -DriverName 'DYMO LabelWriter 450'
 ```
 
-The defaults already use those three values, so this shorter command is
-equivalent for the standard project configuration:
+Replace `<pi-hostname-or-ip>` with the hostname or reserved IP address for
+your Pi, and replace `dymo` if `PRINTER_NAME` was changed on the server. The
+IPP URI is deliberately required; the printer and driver names use the values
+shown above by default, so the shorter form is:
 
 ```powershell
-.\scripts\configure-windows-queue.ps1
+.\scripts\configure-windows-queue.ps1 -IppUri $IppUri
+```
+
+Earlier versions of the helper used a site-specific default local queue name.
+Before the first run after upgrading, check for an existing DYMO queue:
+
+```powershell
+Get-Printer | Where-Object DriverName -Match 'DYMO.*450' |
+  Select-Object Name, DriverName, PortName
+```
+
+If one is already configured, pass its exact reported name so the helper
+validates or replaces that queue instead of creating a second one:
+
+```powershell
+$IppUri = 'ipp://<pi-hostname-or-ip>:631/printers/dymo'
+$PrinterName = '<existing-local-queue-name>'
+.\scripts\configure-windows-queue.ps1 `
+  -IppUri $IppUri `
+  -PrinterName $PrinterName
 ```
 
 The helper converts the CUPS URI to Windows' supported
-`http://pilab.local:631/printers/dymo/.printer` form. It checks the local
-driver, Internet Printing Client feature, Pi connection, port type, selected
-driver, and `RAW` datatype. It is idempotent and never prints a test page.
+`http://<pi-hostname-or-ip>:631/printers/dymo/.printer` form. It checks the
+local driver, Internet Printing Client feature, Pi connection, port type,
+selected driver, and `RAW` datatype. It is idempotent and never prints a test
+page.
 
 This follows the
 [Windows URL-printing model](https://learn.microsoft.com/en-us/windows-hardware/drivers/print/printing-to-urls-from-applications)
@@ -71,10 +95,13 @@ socket stream, while the Pi expects the IPP protocol on port 631.
 
 When a printer with the requested name already uses a class driver, generic
 driver, or wrong port, the helper stops without changing it. Close any print
-dialogues, clear or finish its jobs, then opt in to replacement:
+dialogues, clear or finish its jobs, then opt in to replacement. If the
+migration check found a differently named existing queue, also pass
+`-PrinterName $PrinterName` to this command:
 
 ```powershell
-.\scripts\configure-windows-queue.ps1 -Replace
+$IppUri = 'ipp://<pi-hostname-or-ip>:631/printers/dymo'
+.\scripts\configure-windows-queue.ps1 -IppUri $IppUri -Replace
 ```
 
 The helper first creates and verifies a staging queue. It then swaps the queues
@@ -96,13 +123,17 @@ Remove-Printer -Name '<reported backup queue name>'
 Preview either creation or replacement without making changes with `-WhatIf`:
 
 ```powershell
-.\scripts\configure-windows-queue.ps1 -Replace -WhatIf
+$IppUri = 'ipp://<pi-hostname-or-ip>:631/printers/dymo'
+.\scripts\configure-windows-queue.ps1 -IppUri $IppUri -Replace -WhatIf
 ```
 
 ## Verify without printing
 
+Replace the name below if you deliberately selected a different local queue
+name:
+
 ```powershell
-Get-Printer -Name 'DYMO LabelWriter 450 @ PiLab' -Full |
+Get-Printer -Name 'DYMO LabelWriter 450' -Full |
   Format-List Name, DriverName, PortName, Datatype
 ```
 
