@@ -1,8 +1,7 @@
 ---
+name: Build Raspberry Pi images
 
-name: Build ARM image
-
-'on':
+"on":
   push:
   pull_request:
 
@@ -22,9 +21,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
-      - name: Build Raspberry Pi Zero-compatible image
+      - name: Build Raspberry Pi images
         uses: docker/build-push-action@v7
         with:
           context: .
-          platforms: linux/arm/v5
+          platforms: |
+            linux/arm/v5
+            linux/arm/v7
+            linux/arm64
           push: false
