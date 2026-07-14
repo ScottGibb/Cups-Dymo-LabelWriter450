@@ -7,13 +7,22 @@ or print a label.
 ## Before starting
 
 1. Connect and power on the DYMO LabelWriter 450.
-2. On the Raspberry Pi, verify that Linux sees it:
+2. Check the Raspberry Pi OS architecture:
+
+   ```sh
+   uname -m
+   ```
+
+   Use `linux/arm/v7` for an `armv7l` Pi 4, or `linux/arm64` for an `aarch64`
+   Pi 4 or Pi 5. The original `armv6l` Pi Zero uses `linux/arm/v5`.
+
+3. On the Raspberry Pi, verify that Linux sees the printer:
 
    ```sh
    lsusb | grep -i dymo
    ```
 
-3. Confirm that the container runtime itself works on the Pi. The original
+4. Confirm that the container runtime itself works on the Pi. The original
    Raspberry Pi Zero W has an ARMv6 processor; this image targets the compatible
    `linux/arm/v5` Debian image. Recent official Docker Engine packages do not
    support ARMv6, so keep the already-working runtime or use a compatible

@@ -16,11 +16,24 @@ shared queue over IPP.
 ## Requirements
 
 - A Raspberry Pi connected to the LabelWriter 450 by USB.
-- A container runtime that supports the Pi. The original Raspberry Pi Zero W is
-  ARMv6; the image is built for the compatible `linux/arm/v5` platform.
+- A container runtime that supports the Pi.
 - Docker Compose v2 (`docker compose`) on the Raspberry Pi.
 - The Pi's system D-Bus and Avahi services. Raspberry Pi OS normally provides
   both; a working `<pi-hostname>.local` address confirms Avahi is active.
+
+## Supported Raspberry Pi platforms
+
+The same Dockerfile builds for these Raspberry Pi systems:
+
+| Raspberry Pi system                      | `uname -m` | Docker platform |
+| ---------------------------------------- | ---------- | --------------- |
+| Zero or Zero W                           | `armv6l`   | `linux/arm/v5`  |
+| Pi 4 with 32-bit Raspberry Pi OS         | `armv7l`   | `linux/arm/v7`  |
+| Pi 4 or Pi 5 with 64-bit Raspberry Pi OS | `aarch64`  | `linux/arm64`   |
+
+Pi 4 and Pi 5 use the same 64-bit image variant. Docker selects the matching
+variant automatically when the variants are published as one multi-platform
+image.
 
 ## Start it on the Raspberry Pi
 
@@ -82,8 +95,9 @@ hardware checks, a manual test print, and recovery steps.
 
 GitHub Actions uses MegaLinter for shell, Dockerfile, YAML, JSON, Markdown, and
 workflow checks. It creates a separate pull request when auto-formatting is
-needed and builds the image as `linux/arm/v5`, which is compatible with the
-original ARMv6 Raspberry Pi Zero W.
+needed and validates image builds for `linux/arm/v5`, `linux/arm/v7`, and
+`linux/arm64`. These cover the original Raspberry Pi Zero W, 32-bit Pi 4, and
+64-bit Pi 4 and Pi 5 systems.
 
 Dependabot checks GitHub Actions and the Docker base image every week. Release
 Please generates release pull requests from Conventional Commits.
