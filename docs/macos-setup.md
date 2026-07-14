@@ -7,7 +7,8 @@ while the print dialogue shows only office paper sizes or unnamed custom
 dimensions instead of the DYMO label stocks.
 
 For this project, the **Use** field must be set to **DYMO LabelWriter 450** when
-the printer is added.
+the printer is added. The queue must then be adjusted with this repository's
+macOS helper so the Pi does not run the DYMO raster filter a second time.
 
 ## Before adding the printer
 
@@ -50,6 +51,34 @@ Do not leave **Use** set to **AirPrint**, **Generic PostScript Printer**, or a
 generic DYMO model. Those choices do not provide the LabelWriter 450 stock
 definitions used by this setup.
 
+## Make the DYMO driver safe for the network queue
+
+The stock DYMO PPD describes its output as CUPS Raster even after the Mac's
+`raster2dymolw` filter has converted it to printer-ready DYMO data. A remote
+CUPS server therefore tries to rasterize those bytes again and stops with
+`Unable to open raster file - : No such file or directory`.
+
+From the repository directory on the Mac, find the local queue name and run the
+network-queue helper:
+
+```sh
+lpstat -p
+sudo ./scripts/configure-macos-queue.sh DYMO_LabelWriter_450
+```
+
+Replace `DYMO_LabelWriter_450` if `lpstat` reports another name. The helper
+changes only that local queue's PPD: it retains the named label stocks and DYMO
+filter, but declares the filter output as `application/vnd.cups-raw` so the Pi
+passes it directly to USB. It does not submit a print job.
+
+This uses the standard
+[`cupsFilter2` source and destination format declaration](https://openprinting.github.io/cups/doc/spec-ppd.html#cupsFilter2)
+defined by CUPS.
+
+Run the helper again whenever the printer is removed and re-added or its driver
+is replaced. It is safe to rerun and reports when the queue is already
+configured.
+
 ## Fallback: add the printer by address
 
 Use this method if Bonjour discovery is unavailable:
@@ -72,6 +101,7 @@ Use this method if Bonjour discovery is unavailable:
    **Address**; do not paste the full IPP URL into that field.
 
 4. Check the **Use** field again, then select **Add**.
+5. Run the network-queue helper from the previous section.
 
 The equivalent complete printer URI is:
 
@@ -93,12 +123,18 @@ if necessary:
 ```sh
 lpstat -v DYMO_LabelWriter_450
 lpoptions -p DYMO_LabelWriter_450 -l | grep '^PageSize/'
+grep '^\*cupsFilter' /etc/cups/ppd/DYMO_LabelWriter_450.ppd
 ```
 
 A correctly configured queue lists many DYMO `PageSize` choices and options
 such as print quality or density. A queue that lists only sizes such as
 `Letter`, `Legal`, and `A4` was added with the wrong software and should be
 removed and added again.
+
+The filter check must show a `cupsFilter2` line containing both
+`application/vnd.cups-raster` and `application/vnd.cups-raw`. A legacy
+`cupsFilter` line means the helper has not been applied and the Pi may filter
+the job twice.
 
 Close and reopen the application or its print dialogue after adding the queue.
 Select the DYMO label stock that is physically loaded before the first print;
@@ -112,7 +148,9 @@ macOS can save that choice as a print preset for later jobs.
 3. Add the printer again using the Bonjour or IP steps above.
 4. Before selecting **Add**, verify that **Use** says
    **DYMO LabelWriter 450**.
-5. Run `lpoptions -p <local-queue-name> -l` and confirm that DYMO label stocks
+5. Run `sudo ./scripts/configure-macos-queue.sh <local-queue-name>` from this
+   repository.
+6. Run `lpoptions -p <local-queue-name> -l` and confirm that DYMO label stocks
    are now present.
 
 Alternatively, repair an existing queue in place from Terminal. First use
@@ -122,13 +160,15 @@ apply it to the local queue:
 ```sh
 sudo lpadmin -p DYMO_LabelWriter_450 \
   -m Library/Printers/PPDs/Contents/Resources/lw450.ppd.gz
+sudo ./scripts/configure-macos-queue.sh DYMO_LabelWriter_450
 ```
 
 Replace both the queue name and model identifier with the values reported on
 that Mac. CUPS prints a deprecation warning because the LabelWriter 450 uses a
-legacy vendor driver; that warning is expected. Do not substitute
-`-m everywhere`, which creates a driverless queue and may lose the named DYMO
-stock list. Rerun the verification commands before printing.
+legacy vendor driver; that warning is expected. The second command changes the
+legacy filter declaration to a network-safe `cupsFilter2` declaration. Do not
+substitute `-m everywhere`, which creates a driverless queue and may lose the
+named DYMO stock list. Rerun the verification commands before printing.
 
 Apple also documents the
 [printer-addition fields](https://support.apple.com/en-gb/guide/mac-help/mh14004/mac)

@@ -70,7 +70,8 @@ The printer should then appear automatically on Macs as
 Follow [Add the DYMO printer correctly on macOS](docs/macos-setup.md) before
 printing. The critical step is **Use > Select Software > DYMO LabelWriter
 450**; do not accept AirPrint or Generic PostScript if you need the named DYMO
-label stocks.
+label stocks. Then run the documented macOS helper so printer-ready output is
+sent to the Pi as raw data instead of being processed by the DYMO filter twice.
 
 Confirm the Bonjour record from macOS with:
 

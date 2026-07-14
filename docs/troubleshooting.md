@@ -109,6 +109,32 @@ The named label stocks require the DYMO printer software on the Mac. The Pi
 still performs network sharing and accepts the resulting printer-ready job; the
 DYMO remains physically connected only to the Pi.
 
+### A Mac job stops with `Unable to open raster file`
+
+The unmodified DYMO Mac PPD labels its printer-ready output as CUPS Raster. The
+Pi then invokes `raster2dymolw` a second time and cannot interpret the DYMO
+command stream as a raster file.
+
+Cancel the stopped Mac job, then run the network-queue helper from the
+repository directory on the Mac:
+
+```sh
+cancel -a DYMO_LabelWriter_450
+sudo ./scripts/configure-macos-queue.sh DYMO_LabelWriter_450
+```
+
+Replace the queue name with the value from `lpstat -p`. The helper is
+idempotent, preserves the named label sizes, and never submits a test print.
+Verify the result before retrying:
+
+```sh
+grep '^\*cupsFilter' /etc/cups/ppd/DYMO_LabelWriter_450.ppd
+```
+
+The output must be a `cupsFilter2` declaration containing
+`application/vnd.cups-raw`. If the printer is later removed and re-added, run
+the helper again.
+
 ### No DYMO USB printer found
 
 The container can see only devices explicitly mapped by Compose. Check both the
