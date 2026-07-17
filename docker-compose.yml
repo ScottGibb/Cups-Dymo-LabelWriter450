@@ -1,5 +1,7 @@
 ---
 
+name: dymo-labelwriter450-example
+
 services:
   cups:
     build:
@@ -7,7 +9,7 @@ services:
     container_name: dymo-cups
     restart: unless-stopped
     ports:
-      - "631:631"
+      - "0.0.0.0:631:631"
     devices:
       - /dev/bus/usb:/dev/bus/usb
     environment:
